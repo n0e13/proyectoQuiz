@@ -1,11 +1,83 @@
+/***********/
+/* Botones */
+/***********/
+
+
+body{
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(218, 208, 208);
+}
+h2{
+    letter-spacing: 8px;
+    font-size: 20px;
+    color: rgb(221, 111, 20);
+}
+#preguntas{
+    display: flex;
+    justify-content: center;
+}
+
+fieldset{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    align-content: space-around;
+    height: 70vh;
+    border-radius: 10px;
+}
+fieldset>legend{
+    text-align: center;
+}
+
+input{
+    height: 25%; 
+    font-size: inherit;   
+    width: 100%;
+}
+
+input:hover{
+    background-color: rgb(240, 128, 128);
+}
+
+.btn_yellow, 
+.btn_blue,
+.btn_orange,
+.btn_grey {
+    font-size: 1.5em;
+}
+
+.btn_orange {
+    background-color: orange;
+    color: white;
+}
+
+.btn_grey {
+    background-color: grey;
+    color: white;
+}
+
+.btn_yellow {
+    background-color: rgb(241, 223, 62);
+}
+.btn_blue {
+    background-color: blue;
+    color: white;
+}
+
+
+
+
+
 /*****************/
 /* Media queries */
 /*****************/
 
 @media screen and (min-width: 768px) {
-
-}
-
-@media screen and (min-width: 1366px) {
-    
+    fieldset{
+        flex-basis: 50%;
+    }
 }

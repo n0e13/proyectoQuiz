@@ -3,7 +3,7 @@ const preguntas = [
         titulo: '¿Qué cordillera separa Europa de Asia?',
         respuestas: [
             {
-                class: 'btn_red',
+                class: 'btn_yellow',
                 type: 'button',
                 name: 'no',
                 value: 'Despeñaperros'
@@ -21,7 +21,7 @@ const preguntas = [
                 value: 'Urales'
             },
             {
-                class: 'btn_green',
+                class: 'btn_grey',
                 type: 'button',
                 name: 'no',
                 value: 'Apeninos'
@@ -38,22 +38,22 @@ const preguntas = [
                 value: 'Ramón El Vanidoso'
             },
             {
-                class: 'btn_red',
+                class: 'btn_yellow',
                 type: 'button',
-                name: 'no',
-                value: 'Romualdo y Remo'
+                name: 'yes',
+                value: 'Rómulo y Remo'
             },
             {
-                class: 'btn_green',
+                class: 'btn_grey',
                 type: 'button',
                 name: 'no',
-                value: 'Rémulo y romo'
+                value: 'Rémulo y Romo'
             },
             {
                 class: 'btn_blue',
                 type: 'button',
-                name: 'yes',
-                value: 'Rómulo y Remo'
+                name: 'no',
+                value: 'Romualdo y Remo'
             }
         ]
     },
@@ -64,25 +64,25 @@ const preguntas = [
                 class: 'btn_blue',
                 type: 'button',
                 name: 'yes',
-                value: '300.000km/s'
+                value: '300.000m/s'
             },
             {
-                class: 'btn_green',
+                class: 'btn_grey',
                 type: 'button',
                 name: 'no',
-                value: '300.000 km/h'
+                value: '300.000km/h'
             },
             {
-                class: 'btn_red',
+                class: 'btn_yellow',
                 type: 'button',
                 name: 'no',
-                value: '50 km/h'
+                value: '50km/h'
             },
             {
                 class: 'btn_orange',
                 type: 'button',
                 name: 'no',
-                value: '300.000.000 km/h'
+                value: '300.000.000km/h'
             }
         ]
     },
@@ -90,7 +90,7 @@ const preguntas = [
         titulo: '¿Quién escribió “La colmena”?',
         respuestas: [
             {
-                class: 'btn_red',
+                class: 'btn_yellow',
                 type: 'button',
                 name: 'no',
                 value: 'Miguel de Cervantes'
@@ -108,10 +108,10 @@ const preguntas = [
                 value: 'Camilo José Cela'
             },
             {
-                class: 'btn_green',
+                class: 'btn_grey',
                 type: 'button',
                 name: 'no',
-                value: 'Gabriel García Márquez'
+                value: "Gabriel García Márquez"
             }
         ]
     },
@@ -125,13 +125,13 @@ const preguntas = [
                 value: 'Link'
             },
             {
-                class: 'btn_green',
+                class: 'btn_grey',
                 type: 'button',
                 name: 'no',
                 value: 'Luis'
             },
             {
-                class: 'btn_red',
+                class: 'btn_yellow',
                 type: 'button',
                 name: 'no',
                 value: 'Zelda'
@@ -145,3 +145,52 @@ const preguntas = [
         ]
     }
 ]
+
+
+const fieldset = document.createElement('fieldset');
+
+
+// Validación
+document.querySelector("form[id='preguntas']").addEventListener('click', function (event) {
+
+    // Comprobamos si el nombre es sí o no
+    if (event.target.name == "yes") {
+        fGeneraPregunta();
+    } else {
+        console.log('mal');
+    }
+});
+
+function fGeneraPregunta() {
+    // Una posición al azar para mostrar una pregunta
+    let min = 0;
+    let max = 4;
+    let numPregunta = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // cogemos el formulario creado en el HTML
+    const formulario = document.getElementById('preguntas');
+
+    // variables temporales para recoger solo la primera pregunta
+    let resp = preguntas[numPregunta].respuestas;
+    let pregunta = preguntas[numPregunta].titulo;
+
+    let newHTML = "";
+    fieldset.innerHTML = "";
+
+    // iteramos las respuestas y las añadimos a un string
+    for (let i = 0; i < resp.length; i++) {
+        newHTML += `<input type="${resp[i].type}" 
+        name="${resp[i].name}"
+        value="${resp[i].value}"
+        class="${resp[i].class}">`
+    }
+
+    // añadimos al HTML del body
+    fieldset.innerHTML = `<legend>${preguntas[numPregunta].titulo}</legend>` + newHTML;
+
+    formulario.appendChild(fieldset);
+
+}
+
+// Genera una pregunta nada más abrir 
+document.onload = fGeneraPregunta();
