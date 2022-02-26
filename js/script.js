@@ -448,15 +448,3 @@ if (window.location.pathname == "/index.html") { // El home
     document.onload = fInicial();
     document.onload = fContadorTiempo();
 }
-
-
-
-
-fetch('https://dog.ceo/api/breeds/list/all')
-    .then(res => res.json())
-    .then(breeds => {
-        let aKeys = Object.keys(breeds);
-        for (breed in aKeys[0]) {
-            console.log(breed);
-        }
-    });
