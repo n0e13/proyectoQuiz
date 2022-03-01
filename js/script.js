@@ -223,6 +223,7 @@ let playerScore = 0;      // Puntuación final
 let playerTime = 0;       // Tiempo total de la partida
 let answerTotal = 0;      // Contador de answers acertadas. 
 let answerLoseFail = 0;   // Contador de respuestas perdidas o falladas. Cada una resta 1.
+let maxQuestions = 10;    // Máximo de preguntas por partida
 
 
 
@@ -238,11 +239,17 @@ document.getElementById('answers').addEventListener('click', function (event) {
     // Comprobamos si el nombre es sí o no
     if (event.target.name == "yes") {
         playerScore += timeToReply + 1;
+    } else {
+        answerLoseFail++;
+    }
+
+    if (answerTotal < maxQuestions) {
+        answerTotal++;
         printQuestion(randomQuestion());
         clearInterval(timerAtras);
         startQuiz();
     } else {
-        answerLoseFail++;
+        // TODO: Aquí poner el código para pasar a la página de resultados
     }
 });
 
@@ -361,6 +368,7 @@ let timeToReply = 0;
 function countDown() {
     if (timeToReply == -1) {
         answerLoseFail++;
+        answerTotal++;
         clearInterval(timerAtras);
         startQuiz();
     } else {
@@ -409,10 +417,12 @@ function timeCount() {
 // **************************** //
 
 function startQuiz() {
-    timeToReply = 5;
-    timerAtras = setInterval(countDown, 1000);
-    printQuestion(randomQuestion());
-    countDown();
+    if (answerTotal < maxQuestions) {
+        timeToReply = 5;
+        timerAtras = setInterval(countDown, 1000);
+        printQuestion(randomQuestion());
+        countDown();
+    } 
 }
 
 
