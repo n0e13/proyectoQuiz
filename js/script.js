@@ -308,17 +308,13 @@ let answerLoseFail = 0;   // Contador de respuestas perdidas o falladas. Cada un
 
 // Para que sepa dónde ejecutar cada listener preguntamos por la ruta
 
-if (window.location.pathname == "/index.html") { // El home
+document.getElementById('start').addEventListener('click', function (event) {
 
-    document.querySelector('form[id="datos"]').addEventListener('submit', function (event) {
+    playerName = document.getElementById('player').value;
 
-        const player = event.target.player.value;
-        playerName = player;
-
-        if (playerName != "") {
-            event.preventDefault();
-            let bio = document.getElementById("bio_game");
-            bio.innerHTML = `<p>¡Hola, <strong>${player}</strong>!</p><p>Aquí tienes que darte vida para aparecer en la lista.</p>Las reglas son las siguientes: 
+    if (playerName != "") {
+        let bio = document.getElementById("bio_game");
+        bio.innerHTML = `<p>¡Hola, <strong>${playerName}</strong>!</p><p>Aquí tienes que darte vida para aparecer en la lista.</p>Las reglas son las siguientes: 
     <ul>
     <li>Tienes 5 segundos para leer y contestar cada pregunta.</li>
     <li>La puntuación es el sumatorio de los segundos que te sobran en cada pregunta.</li>
@@ -326,125 +322,132 @@ if (window.location.pathname == "/index.html") { // El home
     <li>Cada pregunta perdida o fallada resta 1 punto.</li>
     <li>Cada partida dura 5 preguntas.</li>
     </ul>
-    <p><p> Calienta motoros. Has venido a jugar. <a href="./pages/quiz.html">¡JUEGA!</a>`;
-            bio.style.display = "block"
-        }
-    });
+    <p><p> Calienta motoros. Has venido a jugar. <a href="./pages/question.html">¡JUEGA!</a>`;
+        bio.style.display = "block"
+    } else {
+        alert('Debes introducir un nombre para jugar');
+    }
+});
 
-} else { // El quiz
+// El quiz
 
-    // Pregunta acertada o no
+// Pregunta acertada o no
 
-    document.querySelector('form[id="preguntas"]').addEventListener('click', function (event) {
-        // Comprobamos si el nombre es sí o no
-        if (event.target.name == "yes") {
-            playerScore += timeToReply + 1;
-            fGeneraPregunta();
-            clearInterval(timerAtras);
-            fInicial();
-        } else {
-            answerLoseFail++;
-        }
-    });
+document.querySelector('form[id="preguntas"]').addEventListener('click', function (event) {
+    // Comprobamos si el nombre es sí o no
+    if (event.target.name == "yes") {
+        playerScore += timeToReply + 1;
+        fGeneraPregunta();
+        clearInterval(timerAtras);
+        fInicial();
+    } else {
+        answerLoseFail++;
+    }
+});
 
 
 
-    /*********************************************************************/
-    // Generador de preguntas
+/*********************************************************************/
+// Generador de preguntas
 
-    const fieldset = document.createElement('fieldset');
+const fieldset = document.createElement('fieldset');
 
-    function fGeneraPregunta() {
-        answerTotal++;  /**************************************** preguntar si es menor que 5 para seguir generando preguntas */
-        // Una posición al azar para mostrar una pregunta
-        let min = 0;
-        let max = preguntas.length - 1;
-        let numPregunta = Math.floor(Math.random() * (max - min + 1)) + min;
+function fGeneraPregunta() {
+    answerTotal++;  /**************************************** preguntar si es menor que 5 para seguir generando preguntas */
+    // Una posición al azar para mostrar una pregunta
+    let min = 0;
+    let max = preguntas.length - 1;
+    let numPregunta = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        // cogemos el formulario creado en el HTML
-        const formulario = document.getElementById('preguntas');
+    // cogemos el formulario creado en el HTML
+    const formulario = document.getElementById('preguntas');
 
-        // variables temporales para recoger solo la primera pregunta
-        let resp = preguntas[numPregunta].respuestas;
-        let pregunta = preguntas[numPregunta].titulo;
+    // variables temporales para recoger solo la primera pregunta
+    let resp = preguntas[numPregunta].respuestas;
+    let pregunta = preguntas[numPregunta].titulo;
 
-        let newHTML = "";
-        fieldset.innerHTML = "";
+    let newHTML = "";
+    fieldset.innerHTML = "";
 
-        // iteramos las respuestas y las añadimos a un string
-        for (let i = 0; i < resp.length; i++) {
-            newHTML += `<input type="${resp[i].type}" 
+    // iteramos las respuestas y las añadimos a un string
+    for (let i = 0; i < resp.length; i++) {
+        newHTML += `<input type="${resp[i].type}" 
         name="${resp[i].name}"
         value="${resp[i].value}"
         class="${resp[i].class}">`
-        }
-        // añadimos al HTML del body
-        fieldset.innerHTML = `<legend>${pregunta}</legend>` + newHTML;
-
-        formulario.appendChild(fieldset);
     }
+    // añadimos al HTML del body
+    fieldset.innerHTML = `<legend>${pregunta}</legend>` + newHTML;
 
-
-
-    /*********************************************************************/
-    // Cuenta atrás para cada pregunta
-
-    let eTimer = document.getElementById('timer');
-    let timerAtras = 0;
-    let timeToReply = 0;
-
-    function fCuentaAtras() {
-        if (timeToReply == -1) {
-            answerLoseFail++;
-            clearInterval(timerAtras);
-            fInicial();
-        } else {
-            eTimer.innerHTML = `Te quedan ${timeToReply} segundos`;
-            timeToReply--;
-        }
-    }
-
-
-
-    /*********************************************************************/
-    // Contador de tiempo en el juego
-
-    let eCont = document.getElementById('contador');
-    let timerContador = setInterval(fContadorTiempo, 1000);
-    let min = 0;
-    let segundos = 0;
-
-    function fContadorTiempo() {
-        if ((segundos == 60) && (min < 10)) {
-            min++;
-            segundos = 0;
-            eCont.innerHTML = `Llevas jugando 0${min}:00`;
-        } else if (segundos < 10) {
-            eCont.innerHTML = `Llevas jugando 0${min}:0${segundos}`;
-            segundos++;
-        } else {
-            eCont.innerHTML = `Llevas jugando 0${min}:${segundos}`;
-            segundos++;
-        }
-    }
-
-
-
-    /*********************************************************************/
-    // Iniciar los temporizadores
-
-    function fInicial() {
-        timeToReply = 5;
-        timerAtras = setInterval(fCuentaAtras, 1000);
-        fGeneraPregunta();
-        fCuentaAtras();
-    }
-
-
-
-    /*********************************************************************/
-    // Llamadas nada más cargar la web
-
-    document.onload = fInicial();
-    document.onload = fContadorTiempo();
+    formulario.appendChild(fieldset);
 }
+
+
+
+/*********************************************************************/
+// Cuenta atrás para cada pregunta
+
+let eTimer = document.getElementById('timer');
+let timerAtras = 0;
+let timeToReply = 0;
+
+function fCuentaAtras() {
+    if (timeToReply == -1) {
+        answerLoseFail++;
+        clearInterval(timerAtras);
+        fInicial();
+    } else {
+        eTimer.innerHTML = `Te quedan ${timeToReply} segundos`;
+        timeToReply--;
+    }
+}
+
+
+
+/*********************************************************************/
+// Contador de tiempo en el juego
+
+let eCont = document.getElementById('contador');
+let timerContador = setInterval(fContadorTiempo, 1000);
+let min = 0;
+let segundos = 0;
+
+function fContadorTiempo() {
+    if ((segundos == 60) && (min < 10)) {
+        min++;
+        segundos = 0;
+        eCont.innerHTML = `Llevas jugando 0${min}:00`;
+    } else if (segundos < 10) {
+        eCont.innerHTML = `Llevas jugando 0${min}:0${segundos}`;
+        segundos++;
+    } else {
+        eCont.innerHTML = `Llevas jugando 0${min}:${segundos}`;
+        segundos++;
+    }
+}
+
+
+
+/*********************************************************************/
+// Iniciar los temporizadores
+
+function fInicial() {
+    timeToReply = 5;
+    timerAtras = setInterval(fCuentaAtras, 1000);
+    fGeneraPregunta();
+    fCuentaAtras();
+}
+
+
+
+/*********************************************************************/
+// Llamadas nada más cargar la web
+
+document.onload = fInicial();
+document.onload = fContadorTiempo();
+
+
+
+document.getElementById('#match').addEventListener('click', function (event) {
+    event.target.innerHTML = "Hola fullstacker";
+});

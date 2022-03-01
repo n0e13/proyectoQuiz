@@ -74,33 +74,22 @@ input {
 }
 
 .btn_orange {
-    background-color: orange;
-    color: white;
+    background-color: var(--clr-orange);
 }
 
 .btn_grey {
-    background-color: grey;
-    color: white;
+    background-color: var(--clr-green);
 }
 
 .btn_yellow {
-    background-color: rgb(241, 223, 62);
+    background-color: var(--clr-yellow);
 }
 
 .btn_blue {
-    background-color: blue;
-    color: white;
+    background-color: var(--clr-blue);
 }
 
 #timer {
     font: 1em bold;
     font-size: 30px;
 }
-
-
-
-/*****************/
-/* Media queries */
-/*****************/
-
-@media screen and (min-width: 768px) {}
