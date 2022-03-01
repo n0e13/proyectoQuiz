@@ -69,15 +69,17 @@ input {
 .btn_yellow,
 .btn_blue,
 .btn_orange,
-.btn_grey {
+.btn_green {
     font-size: 1.5em;
+    width: 300px;
+    height: 150px;
 }
 
 .btn_orange {
     background-color: var(--clr-orange);
 }
 
-.btn_grey {
+.btn_green {
     background-color: var(--clr-green);
 }
 

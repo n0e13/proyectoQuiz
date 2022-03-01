@@ -1,7 +1,7 @@
-const preguntas = [
+const questions = [
     {
-        titulo: '¿Qué cordillera separa Europa de Asia?',
-        respuestas: [
+        label: '¿Qué cordillera separa Europa de Asia?',
+        answers: [
             {
                 class: 'btn_yellow',
                 type: 'button',
@@ -29,8 +29,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Quiénes fueron, según la leyenda, los dos hermanos fundadores de la ciudad de Roma?',
-        respuestas: [
+        label: '¿Quiénes fueron, según la leyenda, los dos hermanos fundadores de la ciudad de Roma?',
+        answers: [
             {
                 class: 'btn_orange',
                 type: 'button',
@@ -58,8 +58,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Cuál es la velocidad de la luz?',
-        respuestas: [
+        label: '¿Cuál es la velocidad de la luz?',
+        answers: [
             {
                 class: 'btn_yellow',
                 type: 'button',
@@ -87,8 +87,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Quién escribió “La colmena”?',
-        respuestas: [
+        label: '¿Quién escribió “La colmena”?',
+        answers: [
             {
                 class: 'btn_yellow',
                 type: 'button',
@@ -116,8 +116,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Cómo se llama el protagonista de la saga de videojuegos "The Legend of Zelda"?',
-        respuestas: [
+        label: '¿Cómo se llama el protagonista de la saga de videojuegos "The Legend of Zelda"?',
+        answers: [
             {
                 class: 'btn_grey',
                 type: 'button',
@@ -145,8 +145,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Qué isla sirvió de prisión para Napoleón tras su derrota en la batalla de Waterloo?',
-        respuestas: [
+        label: '¿Qué isla sirvió de prisión para Napoleón tras su derrota en la batalla de Waterloo?',
+        answers: [
             {
                 class: 'btn_grey',
                 type: 'button',
@@ -174,8 +174,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Cuál es el río más caudaloso del mundo?',
-        respuestas: [
+        label: '¿Cuál es el río más caudaloso del mundo?',
+        answers: [
             {
                 class: 'btn_grey',
                 type: 'button',
@@ -203,8 +203,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Cómo se llama el antagonista principal de la película de Disney "El Rey León"?',
-        respuestas: [
+        label: '¿Cómo se llama el antagonista principal de la película de Disney "El Rey León"?',
+        answers: [
             {
                 class: 'btn_grey',
                 type: 'button',
@@ -232,8 +232,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿De qué estilo arquitectónico es la catedral de Notre Dame?',
-        respuestas: [
+        label: '¿De qué estilo arquitectónico es la catedral de Notre Dame?',
+        answers: [
             {
                 class: 'btn_orange',
                 type: 'button',
@@ -261,8 +261,8 @@ const preguntas = [
         ]
     },
     {
-        titulo: '¿Por qué fue famosa Marie Curie?',
-        respuestas: [
+        label: '¿Por qué fue famosa Marie Curie?',
+        answers: [
             {
                 class: 'btn_yellow',
                 type: 'button',
@@ -291,90 +291,158 @@ const preguntas = [
     },
 ]
 
-/*********************************************************************/
-// Variables de usuario
+
+// ********************** //
+//                        //
+//  Variables de usuario  // TODO: hay que meter esto en localStorage o Firebase
+//                        //
+// ********************** //
 
 let playerName = "";      // Nombre
 let playerScore = 0;      // Puntuación final
 let playerTime = 0;       // Tiempo total de la partida
-let answerTotal = 0;      // Contador de respuestas acertadas. 
+let answerTotal = 0;      // Contador de answers acertadas. 
 let answerLoseFail = 0;   // Contador de respuestas perdidas o falladas. Cada una resta 1.
 
 
-/*********************************************************************/
-// Validación
+
+
+
+// ************************ //
+//                          //
+//  Pregunta acertada o no  //
+//                          //
+// ************************ //
+
+document.getElementById('answers').addEventListener('click', function (event) {
+    // Comprobamos si el nombre es sí o no
+    if (event.target.name == "yes") {
+        playerScore += timeToReply + 1;
+        printQuestion(randomQuestion());
+        clearInterval(timerAtras);
+        startQuiz();
+    } else {
+        answerLoseFail++;
+    }
+});
 
 
 
 
 
-// Pregunta acertada o no
-if(document.getElementById('preguntas')) {
-    document.getElementById('preguntas').addEventListener('click', function (event) {
-        // Comprobamos si el nombre es sí o no
-        if (event.target.name == "yes") {
-            playerScore += timeToReply + 1;
-            fGeneraPregunta();
-            clearInterval(timerAtras);
-            fInicial();
-        } else {
-            answerLoseFail++;
-        }
-    });
-}
+// ***************** //
+//                   //
+//  Pregunta ramdon  //
+//                   //
+// ***************** //
 
-
-
-
-/*********************************************************************/
-// Generador de preguntas
-
-const fieldset = document.createElement('fieldset');
-
-function fGeneraPregunta() {
-    answerTotal++;  /**************************************** preguntar si es menor que 5 para seguir generando preguntas */
+function randomQuestion() {
     // Una posición al azar para mostrar una pregunta
     let min = 0;
-    let max = preguntas.length - 1;
-    let numPregunta = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    // cogemos el formulario creado en el HTML
-    const formulario = document.getElementById('preguntas');
-
-    // variables temporales para recoger solo la primera pregunta
-    let resp = preguntas[numPregunta].respuestas;
-    let pregunta = preguntas[numPregunta].titulo;
-
-    let newHTML = "";
-    fieldset.innerHTML = "";
-
-    // iteramos las respuestas y las añadimos a un string
-    for (let i = 0; i < resp.length; i++) {
-        newHTML += `<input type="${resp[i].type}" 
-        name="${resp[i].name}"
-        value="${resp[i].value}"
-        class="${resp[i].class}">`
-    }
-    // añadimos al HTML del body
-    fieldset.innerHTML = `<legend>${pregunta}</legend>` + newHTML;
-
-    formulario.appendChild(fieldset);
+    let max = questions.length - 1;
+    let numQuestion = Math.floor(Math.random() * (max - min + 1)) + min;
+    return questions[numQuestion];
 }
 
 
 
-/*********************************************************************/
-// Cuenta atrás para cada pregunta
+
+
+// ******************* //
+//                     //
+//  Imprimir pregunta  //
+//                     //
+// ******************* //
+
+function printQuestion(question) {
+    document.getElementById('question').innerHTML = printTitle(question);
+    document.getElementById('answers').innerHTML = printAnswers(question);
+}
+
+
+
+
+
+// ******************************** //
+//                                  //
+//  Imprimir título de la pregunta  //
+//                                  //
+// ******************************** //
+
+function printTitle(question) {
+    return question.label;
+}
+
+
+
+
+
+// ******************************* //
+//                                 //
+//  Imprimir todas las respuestas  //
+//                                 //
+// ******************************* //
+
+function printAnswers(question) {
+    let aAnswers = question.answers;
+    let sAnswers = "";
+    for (let i = 0; i < aAnswers.length; i++) {
+        sAnswers += printAnswer(aAnswers[i], i);
+    }
+    return sAnswers;
+}
+
+
+
+
+
+// ************************ //
+//                          //
+//  Imprimir una respuesta  //
+//                          //
+// ************************ //
+
+const aColors = ["btn_yellow", "btn_orange", "btn_green", "btn_blue"];
+
+function printAnswer(answer, i) {
+    let newBtn = document.createElement("button");
+
+    // Atributos
+    let btnClass = document.createAttribute("class");
+    btnClass.value = aColors[i];
+    newBtn.setAttributeNode(btnClass);
+
+    let btnName = document.createAttribute("name");
+    btnName.value = answer.name;
+    newBtn.setAttributeNode(btnName);
+
+    let btnValue = document.createAttribute("value");
+    btnValue.value = answer.value;
+    newBtn.setAttributeNode(btnValue);
+    newBtn.innerHTML = answer.value;
+
+    return newBtn.outerHTML;
+}
+
+
+
+
+
+// ********************************* //
+//                                   //
+//  Cuenta atrás para cada pregunta  //
+//                                   //
+// ********************************* //
 
 let eTimer = document.getElementById('timer');
 let timerAtras = 0;
 let timeToReply = 0;
 
-function fCuentaAtras() {
+function countDown() {
     if (timeToReply == -1) {
         answerLoseFail++;
         clearInterval(timerAtras);
-        fInicial();
+        startQuiz();
     } else {
         eTimer.innerHTML = `Te quedan ${timeToReply} segundos`;
         timeToReply--;
@@ -383,15 +451,20 @@ function fCuentaAtras() {
 
 
 
-/*********************************************************************/
-// Contador de tiempo en el juego
+
+
+// *********************** //
+//                         //
+//  Contador dela partida  //
+//                         //
+// *********************** //
 
 let eCont = document.getElementById('contador');
-let timerContador = setInterval(fContadorTiempo, 1000);
+let timerContador = setInterval(timeCount, 1000);
 let min = 0;
 let segundos = 0;
 
-function fContadorTiempo() {
+function timeCount() {
     if ((segundos == 60) && (min < 10)) {
         min++;
         segundos = 0;
@@ -407,20 +480,30 @@ function fContadorTiempo() {
 
 
 
-/*********************************************************************/
-// Iniciar los temporizadores
 
-function fInicial() {
+
+// **************************** //
+//                              //
+//  Iniciar los temporizadores  //
+//                              //
+// **************************** //
+
+function startQuiz() {
     timeToReply = 5;
-    timerAtras = setInterval(fCuentaAtras, 1000);
-    fGeneraPregunta();
-    fCuentaAtras();
+    timerAtras = setInterval(countDown, 1000);
+    printQuestion(randomQuestion());
+    countDown();
 }
 
 
 
-/*********************************************************************/
-// Llamadas nada más cargar la web
 
-fInicial();
-fContadorTiempo();
+
+// ******** //
+//          //
+//  Inicio  //
+//          //
+// ******** //
+
+startQuiz();
+timeCount();
