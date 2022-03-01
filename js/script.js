@@ -304,46 +304,25 @@ let answerLoseFail = 0;   // Contador de respuestas perdidas o falladas. Cada un
 /*********************************************************************/
 // Validación
 
-// Si metió un nombre y mostrar las reglas del juego y el enlace
 
-// Para que sepa dónde ejecutar cada listener preguntamos por la ruta
 
-document.getElementById('start').addEventListener('click', function (event) {
 
-    playerName = document.getElementById('player').value;
-
-    if (playerName != "") {
-        let bio = document.getElementById("bio_game");
-        bio.innerHTML = `<p>¡Hola, <strong>${playerName}</strong>!</p><p>Aquí tienes que darte vida para aparecer en la lista.</p>Las reglas son las siguientes: 
-    <ul>
-    <li>Tienes 5 segundos para leer y contestar cada pregunta.</li>
-    <li>La puntuación es el sumatorio de los segundos que te sobran en cada pregunta.</li>
-    <li>Hay 10 cuestiones diferentes. Se muestran aleatoriamente.</li>
-    <li>Cada pregunta perdida o fallada resta 1 punto.</li>
-    <li>Cada partida dura 5 preguntas.</li>
-    </ul>
-    <p><p> Calienta motoros. Has venido a jugar. <a href="./pages/question.html">¡JUEGA!</a>`;
-        bio.style.display = "block"
-    } else {
-        alert('Debes introducir un nombre para jugar');
-    }
-});
-
-// El quiz
 
 // Pregunta acertada o no
+if(document.getElementById('preguntas')) {
+    document.getElementById('preguntas').addEventListener('click', function (event) {
+        // Comprobamos si el nombre es sí o no
+        if (event.target.name == "yes") {
+            playerScore += timeToReply + 1;
+            fGeneraPregunta();
+            clearInterval(timerAtras);
+            fInicial();
+        } else {
+            answerLoseFail++;
+        }
+    });
+}
 
-document.querySelector('form[id="preguntas"]').addEventListener('click', function (event) {
-    // Comprobamos si el nombre es sí o no
-    if (event.target.name == "yes") {
-        playerScore += timeToReply + 1;
-        fGeneraPregunta();
-        clearInterval(timerAtras);
-        fInicial();
-    } else {
-        answerLoseFail++;
-    }
-});
 
 
 
@@ -443,11 +422,5 @@ function fInicial() {
 /*********************************************************************/
 // Llamadas nada más cargar la web
 
-document.onload = fInicial();
-document.onload = fContadorTiempo();
-
-
-
-document.getElementById('#match').addEventListener('click', function (event) {
-    event.target.innerHTML = "Hola fullstacker";
-});
+fInicial();
+fContadorTiempo();
