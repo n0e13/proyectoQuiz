@@ -20,59 +20,46 @@
 }
 
 
-/***********/
-/* Botones */
-/***********/
 
-body {
-    box-sizing: border-box;
-    flex-wrap: wrap;
+
+body{
     display: flex;
-    flex-direction: column;
     align-items: center;
-    background-color: rgb(218, 208, 208);
+    flex-direction: column;
 }
 
-h2 {
-    letter-spacing: 8px;
-    font-size: 20px;
-    color: rgb(221, 111, 20);
-}
+
+
 
 #bio_game {
     display: none;
 }
 
-#preguntas {
-    display: flex;
-    justify-content: center;
+h3 {
+    margin:25px;
 }
 
-fieldset {
+
+#answers {
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
-    align-content: space-around;
-    height: 70vh;
-    width: 30vw;
+    align-items: center;
+    width: 85%;
+    padding: 20px;
 }
 
-fieldset>legend {
-    text-align: center;
-}
 
-input {
-    height: 25%;
-    font-size: inherit;
-}
+
 
 .btn_yellow,
 .btn_blue,
 .btn_orange,
 .btn_green {
     font-size: 1.5em;
-    width: 300px;
-    height: 150px;
+    width: 75%;
+    height: 70px;
+    margin: 10px;
+    border: 0px solid transparent;
 }
 
 .btn_orange {
@@ -94,4 +81,24 @@ input {
 #timer {
     font: 1em bold;
     font-size: 30px;
+}
+
+/* ------------- */
+/* Media queries */
+/* ------------- */
+/* PC  A partir de 1366px */
+@media screen and (min-width: 768px) {
+    #answers {
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    .btn_yellow,
+    .btn_blue,
+    .btn_orange,
+    .btn_green {
+        width: 40%;
+    }
+   
+
 }
