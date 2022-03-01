@@ -3,26 +3,18 @@ const questions = [
         label: '¿Qué cordillera separa Europa de Asia?',
         answers: [
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'no',
                 value: 'Despeñaperros'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'Caucaso'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'yes',
                 value: 'Urales'
             },
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'no',
                 value: 'Apeninos'
             }
@@ -32,26 +24,18 @@ const questions = [
         label: '¿Quiénes fueron, según la leyenda, los dos hermanos fundadores de la ciudad de Roma?',
         answers: [
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'no',
                 value: 'Ramón El Vanidoso'
             },
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'yes',
                 value: 'Rómulo y Remo'
             },
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'no',
                 value: 'Rémulo y Romo'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'Romualdo y Remo'
             }
@@ -61,26 +45,18 @@ const questions = [
         label: '¿Cuál es la velocidad de la luz?',
         answers: [
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'yes',
                 value: '300.000 km/s'
             },
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'no',
                 value: '300.000 km/h'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: '360.000 km/h'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'no',
                 value: '300.000.000 km/h'
             }
@@ -90,26 +66,18 @@ const questions = [
         label: '¿Quién escribió “La colmena”?',
         answers: [
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'no',
                 value: 'Miguel de Cervantes'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'La abeja Maya'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'yes',
                 value: 'Camilo José Cela'
             },
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'no',
                 value: "Gabriel García Márquez"
             }
@@ -119,26 +87,18 @@ const questions = [
         label: '¿Cómo se llama el protagonista de la saga de videojuegos "The Legend of Zelda"?',
         answers: [
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'yes',
                 value: 'Link'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'Luis'
             },
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'no',
                 value: 'Zelda'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'no',
                 value: 'Lucas'
             }
@@ -148,26 +108,18 @@ const questions = [
         label: '¿Qué isla sirvió de prisión para Napoleón tras su derrota en la batalla de Waterloo?',
         answers: [
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'no',
                 value: 'Isla Wake'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'yes',
                 value: 'Santa Elena'
             },
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'no',
                 value: 'San Antonio de Palé'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'no',
                 value: 'Santa Lucía'
             }
@@ -177,26 +129,18 @@ const questions = [
         label: '¿Cuál es el río más caudaloso del mundo?',
         answers: [
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'no',
                 value: 'Yangtsé'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'Nilo'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'no',
                 value: 'Misisipi'
             },
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'yes',
                 value: 'Amazonas'
             }
@@ -206,26 +150,18 @@ const questions = [
         label: '¿Cómo se llama el antagonista principal de la película de Disney "El Rey León"?',
         answers: [
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'yes',
                 value: 'Scar'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'no',
                 value: 'Mufasa'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'Banzai'
             },
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'no',
                 value: 'Rafiki'
             }
@@ -235,26 +171,18 @@ const questions = [
         label: '¿De qué estilo arquitectónico es la catedral de Notre Dame?',
         answers: [
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'yes',
                 value: 'Gótico'
             },
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'no',
                 value: 'Románico'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'Renacentista'
             },
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'no',
                 value: 'Neoclásico'
             }
@@ -264,26 +192,18 @@ const questions = [
         label: '¿Por qué fue famosa Marie Curie?',
         answers: [
             {
-                class: 'btn_yellow',
-                type: 'button',
                 name: 'no',
                 value: 'Modelo de capas nuclear'
             },
             {
-                class: 'btn_blue',
-                type: 'button',
                 name: 'no',
                 value: 'Fisión nuclear'
             },
             {
-                class: 'btn_orange',
-                type: 'button',
                 name: 'no',
                 value: 'MANIAC'
             },
             {
-                class: 'btn_grey',
-                type: 'button',
                 name: 'yes',
                 value: 'Radiactividad'
             }
