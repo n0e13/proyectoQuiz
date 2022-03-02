@@ -381,11 +381,11 @@ function countDown() {
 
 
 
-// *********************** //
-//                         //
-//  Contador dela partida  //
-//                         //
-// *********************** //
+// ************************ //
+//                          //
+//  Contador de la partida  //
+//                          //
+// ************************ //
 
 let eCont = document.getElementById('contador');
 let timerContador = setInterval(timeCount, 1000);
