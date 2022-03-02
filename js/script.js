@@ -252,6 +252,7 @@ document.getElementById('answers').addEventListener('click', function (event) {
         clearInterval(timerAtras);
         startQuiz();
     } else {
+        // Una vez llega a 10 respuestas. Mostramos los resultados
         window.location.href = "../pages/results.html";
     }
 });
