@@ -212,18 +212,21 @@ const questions = [
 ]
 
 
+
+
+
 // ********************** //
 //                        //
 //  Variables de usuario  // TODO: hay que meter esto en localStorage o Firebase
 //                        //
 // ********************** //
 
-let playerName = "";      // Nombre
+let playerName = "";      // Nombre TODO: lo tenemos ya en el HOME hay que almacenarlo allí para leerlo aquí
 let playerScore = 0;      // Puntuación final
 let playerTime = 0;       // Tiempo total de la partida
 let answerTotal = 0;      // Contador de answers acertadas. 
 let answerLoseFail = 0;   // Contador de respuestas perdidas o falladas. Cada una resta 1.
-let maxQuestions = 10;    // Máximo de preguntas por partida
+let maxQuestions = 9;    // Máximo de preguntas por partida. Empieza en 0.
 
 
 
@@ -249,7 +252,7 @@ document.getElementById('answers').addEventListener('click', function (event) {
         clearInterval(timerAtras);
         startQuiz();
     } else {
-        // TODO: Aquí poner el código para pasar a la página de resultados
+        window.location.href = "../pages/results.html";
     }
 });
 
