@@ -6,6 +6,7 @@
 
 document.getElementById('start').addEventListener('click', function (event) {
     // Si metió un nombre y mostrar las reglas del juego y el enlace
+    // TODO: Una vez metido el nombre, comprobar si existe en la bd para mostrar su gráfica de juego anterior
     playerName = document.getElementById('player').value;
 
     if (playerName != "") {

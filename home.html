@@ -6,21 +6,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Document</title>
 </head>
 
 <body>
     <h1>El hall of fame te espera</h1>
-    
-        <label name="nombre">¿Cómo quieres que se te recuerde?</label>
-        <input type="text" name="player" minlength="3" id="player">
-        <button type="button" id="start">Comenzar</button>
-    
+
+    <label name="nombre">¿Cómo quieres que se te recuerde?</label>
+    <input type="text" name="player" minlength="3" id="player">
+    <button type="button" id="start">Comenzar</button>
+
     <div id="bio_game">
-      
-      
+
     </div>
-<script src="./js/home.js"></script>
+
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <script>
+        const labels = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+        ];
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [0, 10, 5, 2, 20, 30, 45],
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+    </script>
+    <script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+
+    <script src="./js/home.js"></script>
 </body>
 
 </html>
