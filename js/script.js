@@ -275,91 +275,97 @@ const storage = getStorage();
 //  Registro con email + pass  //
 //                             //
 // *************************** //
+let userData = "";
+if (document.getElementById('user-data') != null) {
+    userData = document.getElementById('user-data');
+}
 
-const signUpForm = document.getElementById('signup-form');
-const loginForm = document.getElementById('login-form');
-const logout = document.getElementById('logout');
-const userData = document.getElementById('user-data');
-
-//SignUp function
-signUpForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const signUpEmail = document.getElementById('signup-email').value;
-    const signUpPassword = document.getElementById('signup-pass').value;
-    const signUpUser = document.getElementById('signup-user').value;
-    const usersRef = collection(db, "users");
-    const signUpImg = document.getElementById('signup-picture').files[0];
-    const storageRef = ref(storage, signUpImg.name);
-    let publicImageUrl;
-    try {
-        //Create auth user
-        await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
-            .then((userCredential) => {
-                console.log('User registered')
-                const user = userCredential.user;
-                signUpForm.reset();
+if (document.getElementById('signup-form') != null) {
+    const signUpForm = document.getElementById('signup-form');
+    //SignUp function
+    signUpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const signUpEmail = document.getElementById('signup-email').value;
+        const signUpPassword = document.getElementById('signup-pass').value;
+        const signUpUser = document.getElementById('signup-user').value;
+        const usersRef = collection(db, "users");
+        const signUpImg = document.getElementById('signup-picture').files[0];
+        const storageRef = ref(storage, signUpImg.name);
+        let publicImageUrl;
+        try {
+            //Create auth user
+            await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
+                .then((userCredential) => {
+                    console.log('User registered')
+                    const user = userCredential.user;
+                    signUpForm.reset();
+                })
+            //Upload file to cloud storage
+            await uploadBytes(storageRef, signUpImg).then(async (snapshot) => {
+                console.log('Uploaded a blob or file!')
+                publicImageUrl = await getDownloadURL(storageRef);
             })
-        //Upload file to cloud storage
-        await uploadBytes(storageRef, signUpImg).then(async (snapshot) => {
-            console.log('Uploaded a blob or file!')
-            publicImageUrl = await getDownloadURL(storageRef);
-        })
-        //Create document in DB
-        await setDoc(doc(usersRef, signUpEmail), {
-            username: signUpUser,
-            email: signUpEmail,
-            profile_picture: publicImageUrl
-        })
-    } catch (error) {
-        console.log('Error: ', error)
-    }
+            //Create document in DB
+            await setDoc(doc(usersRef, signUpEmail), {
+                username: signUpUser,
+                email: signUpEmail,
+                profile_picture: publicImageUrl
+            })
+        } catch (error) {
+            console.log('Error: ', error)
+        }
 
-})
+    })
+}
 
 //Login function
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const loginEmail = document.getElementById('login-email').value;
-    const loginPassword = document.getElementById('login-pass').value;
-    //Call the collection in the DB
-    const docRef = doc(db, "users", loginEmail);
-    //Search a document that matches with our ref
-    const docSnap = await getDoc(docRef);
+if (document.getElementById('login-form') != null) {
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const loginEmail = document.getElementById('login-email').value;
+        const loginPassword = document.getElementById('login-pass').value;
+        //Call the collection in the DB
+        const docRef = doc(db, "users", loginEmail);
+        //Search a document that matches with our ref
+        const docSnap = await getDoc(docRef);
 
-    signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-        .then((userCredential) => {
-            console.log('User authenticated')
-            const user = userCredential.user;
-            loginForm.reset();
-        })
-        .then(() => {
-            if (docSnap.exists()) {
-                userData.style.cssText = 'background-color: #73AB84;width: 50%;margin: 2rem auto;padding: 1rem;border-radius: 5px;display: flex;flex-direction: column;align-items: center';
-                userData.innerHTML = `<h3>User Data</h3>
-                              <p>Username: ${docSnap.data().username}</p>
-                              <p>Email: ${docSnap.data().email}</p>
-                              <img src=${docSnap.data().profile_picture} alt='User profile picture'>`
-            } else {
-                console.log("No such document!");
-            }
-        })
-        .catch((error) => {
-            document.getElementById('msgerr').innerHTML = 'Invalid user or password';
-            const errorCode = error.code;
-            const errorMessage = error.message;
+        signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+            .then((userCredential) => {
+                console.log('User authenticated')
+                const user = userCredential.user;
+                loginForm.reset();
+            })
+            .then(() => {
+                if (docSnap.exists()) {
+                    showUserData(docSnap.data().username, docSnap.data().email, docSnap.data().profile_picture);
+                } else {
+                    console.log("No such document!");
+                }
+            })
+            .catch((error) => {
+                document.getElementById('msgerr').innerHTML = 'Invalid user or password';
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    })
+}
+
+
+if (document.getElementById('logout') != null) {
+    const logout = document.getElementById('logout');
+    //Logout function
+    logout.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            console.log('Logout user')
+            userData.style.cssText = '';
+            userData.innerHTML = ``;
+        }).catch((error) => {
+            console.log('Error: ', error)
         });
-})
+    })
+}
 
-//Logout function
-logout.addEventListener('click', () => {
-    signOut(auth).then(() => {
-        console.log('Logout user')
-        userData.style.cssText = '';
-        userData.innerHTML = ``;
-    }).catch((error) => {
-        console.log('Error: ', error)
-    });
-})
 
 //Observe the user's state
 auth.onAuthStateChanged(user => {
@@ -369,6 +375,14 @@ auth.onAuthStateChanged(user => {
         console.log('No logged user');
     }
 })
+
+function showUserData(nick, email, photo) {
+    userData.style.cssText = 'background-color: #73AB84;width: 50%;margin: 2rem auto;padding: 1rem;border-radius: 5px;display: flex;flex-direction: column;align-items: center';
+    userData.innerHTML = `<h3>User Data</h3>
+                  <p>Username: ${nick}</p>
+                  <p>Email: ${email}</p>
+                  <img src=${photo} alt='User profile picture'>`
+}
 
 
 
@@ -388,23 +402,24 @@ if (document.getElementById('google') != null) {
 
         const authGoogle = getAuth();
         signInWithPopup(authGoogle, provider)
-          .then((result) => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            // The signed-in user info.
-            const user = result.user;
-            console.log(user);
-        }).catch((error) => {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
-        });
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+                showUserData("n0e", user.email, user.photoURL); // TODO: pasar un nickname
+                console.log(user);
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                // ...
+            });
     });
 }
 
@@ -619,22 +634,24 @@ function printAnswer(answer, i) {
 
 let timerAtras = 0;
 let timeToReply = 0;
+let eTimer = "";
 
 if (document.getElementById('timer') != null) {
-    let eTimer = document.getElementById('timer');
+    eTimer = document.getElementById('timer');
+}
 
-    function countDown() {
-        if (timeToReply == -1) {
-            answerLoseFail++;
-            answerTotal++;
-            clearInterval(timerAtras);
-            startQuiz();
-        } else {
-            eTimer.innerHTML = `Te quedan ${timeToReply} segundos`;
-            timeToReply--;
-        }
+function countDown() {
+    if (timeToReply == -1) {
+        answerLoseFail++;
+        answerTotal++;
+        clearInterval(timerAtras);
+        startQuiz();
+    } else {
+        eTimer.innerHTML = `Te quedan ${timeToReply} segundos`;
+        timeToReply--;
     }
 }
+
 
 
 
@@ -645,24 +662,25 @@ if (document.getElementById('timer') != null) {
 //  Contador de la partida  //
 //                          //
 // ************************ //
-
+let eCont = "";
 if (document.getElementById('contador') != null) {
-    let eCont = document.getElementById('contador');
-    let timerContador = setInterval(timeCount, 1000);
-    let min = 0;
-    let segundos = 0;
-    function timeCount() {
-        if ((segundos == 60) && (min < 10)) {
-            min++;
-            segundos = 0;
-            eCont.innerHTML = `Llevas jugando 0${min}:00`;
-        } else if (segundos < 10) {
-            eCont.innerHTML = `Llevas jugando 0${min}:0${segundos}`;
-            segundos++;
-        } else {
-            eCont.innerHTML = `Llevas jugando 0${min}:${segundos}`;
-            segundos++;
-        }
+    eCont = document.getElementById('contador');
+    setInterval(timeCount, 1000);
+}
+
+let min = 0;
+let segundos = 0;
+function timeCount() {
+    if ((segundos == 60) && (min < 10)) {
+        min++;
+        segundos = 0;
+        eCont.innerHTML = `Llevas jugando 0${min}:00`;
+    } else if (segundos < 10) {
+        eCont.innerHTML = `Llevas jugando 0${min}:0${segundos}`;
+        segundos++;
+    } else {
+        eCont.innerHTML = `Llevas jugando 0${min}:${segundos}`;
+        segundos++;
     }
 }
 
@@ -680,6 +698,7 @@ function startQuiz() {
     if (answerTotal < maxQuestions) {
         timeToReply = 5;
         timerAtras = setInterval(countDown, 1000);
+        console.log(timerAtras);
         printQuestion(randomQuestion());
         countDown();
     }
