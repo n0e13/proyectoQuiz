@@ -1,6 +1,23 @@
+
+async function questiontApi() {
+    let response = await fetch(`https://opentdb.com/api.php?amount=10&type=multiple`);
+    let data = await response.json()
+    console.log(data);
+    useApi(data)
+}
+
+function useApi(data){
+    for(let i=0;i< data.results.length;i++){
+        document.querySelector('#pinta').innerHTML= `
+        ${data.results[i].question}
+        `
+    }
+}
+questiontApi();
+
 const questions = [
     {
-        label: '¿Qué cordillera separa Europa de Asia?',
+        label: '¿Quiénes fueron, según la leyenda, los dos hermanos fundadores de la ciudad de Roma?',
         answers: [
             {
                 name: 'no',
