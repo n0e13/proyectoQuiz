@@ -211,10 +211,10 @@ const questions = [
     },
 ]
 
-// Probar esto para unificar scripts
-/* if(document.getElementById("hola")==null){
-    console.log("sorry")
-    } */
+
+
+
+
 // ************ //
 //              //
 //  Validación  //
