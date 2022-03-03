@@ -60,6 +60,7 @@ h3 {
     height: 70px;
     margin: 10px;
     border: 0px solid transparent;
+    border-radius: 10px;
 }
 
 .btn_orange {
