@@ -232,11 +232,19 @@ const questions = [
 
 
 
-// ********************* //
-//                       //
-//  Registro de usuario  //
-//                       //
-// ********************* //
+// ********************************************************************************************************** //
+//                                                                                                            //
+//                                                HOME                                                        //
+//                                                                                                            //
+// ********************************************************************************************************** //
+
+
+
+// ******************************* //
+//                                 //
+//  Importaciones de Firebase v.9  //
+//                                 //
+// ******************************* //
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
@@ -246,7 +254,12 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstati
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 
-// Your web app's Firebase configuration
+// *************************** //
+//                             //
+//  Configuración de Firebase  //
+//                             //
+// *************************** //
+
 const firebaseConfig = {
     apiKey: "AIzaSyDOSYwaFGAjU3SFP_ZbW6HK8Vix9ieYe7I",
     authDomain: "pruebaweb-de104.firebaseapp.com",
@@ -266,6 +279,92 @@ const db = getFirestore(app);
 //Initialize cloudstore
 const storage = getStorage();
 
+
+
+
+
+// ********************* //
+//                       //
+//  Registro con Google  //
+//                       //
+// ********************* //
+
+if (document.getElementById('google') != null) {
+    const signGoogle = document.getElementById('google');
+
+    signGoogle.addEventListener('click', function (event) {
+        const provider = new GoogleAuthProvider();
+        provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
+        const authGoogle = getAuth();
+        signInWithPopup(authGoogle, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+                console.log(user);
+                // TODO: comprobamos en la bd si está reg y si tiene un nick, 
+                // si no tiene nick, mostramos el div de setNick para que lo guarde
+                // una vez guardado, mostramos la caja de info y las gráficas junto con botón iniciar
+                showUserData("n0e", user.email, user.photoURL); // TODO: pasar un nickname
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                // ...
+            });
+    });
+}
+
+
+
+
+// *************************** //
+//                             //
+//  Registro con email + pass  //
+//                             //
+// *************************** //
+
+function setNick() {
+    if (document.getElementById('save') != null) {
+        let saveNick = document.getElementById('save');
+        // Si metió un nombre y mostrar las reglas del juego y el enlace
+        // TODO: Una vez metido el nombre, comprobar si existe en la bd para mostrar su gráfica de juego anterior
+        playerName = document.getElementById('player').value;
+
+        if (playerName != "") {
+            let bio = document.getElementById("bio_game");
+            bio.innerHTML = `<p>¡Hola, <strong>${playerName}</strong>!</p><p>Aquí tienes que darte vida para aparecer en la lista.</p>Las reglas son las siguientes: 
+        <ul>
+        <li>Tienes 5 segundos para leer y contestar cada pregunta.</li>
+        <li>La puntuación es el sumatorio de los segundos que te sobran en cada pregunta.</li>
+        <li>Hay 10 cuestiones diferentes. Se muestran aleatoriamente.</li>
+        <li>Cada pregunta perdida o fallada resta 1 punto.</li>
+        <li>Cada partida dura 5 preguntas.</li>
+        </ul>
+        <p><p> Calienta motoros. Has venido a jugar. <a href="./pages/question.html">¡JUEGA!</a>`;
+            bio.style.display = "block";
+            bio.style.visibility = "visible";
+        } else { // Aviso de que falta un nombre 
+            let bio = document.getElementById("bio_game");
+            bio.innerHTML = `Debes introducir un nombre para jugar`;
+            bio.style = "border: 2px solid red; border-radius: 25px; padding: 10px;";
+            bio.style.display = "block";
+            bio.style.visibility = "visible";
+        }
+    }
+}
+// TODO: los registrados con google no tienen nick. les pedimos que nos den uno y lo guardamos en firebase
+// junto con el resto de datos. si le da a guardar sin meter nick, mostramos el ELSE.
+// cuando se guarda el nick, se muestra la tabla de abajo con los datos, nick, email y foto
+// el email es necesario mostrarlo?
+// El nick es el que luego se muestra en el hall of fame
 
 
 
@@ -301,10 +400,11 @@ if (document.getElementById('signup-form') != null) {
                     signUpForm.reset();
                 })
             //Upload file to cloud storage
-            await uploadBytes(storageRef, signUpImg).then(async (snapshot) => {
-                console.log('Uploaded a blob or file!')
-                publicImageUrl = await getDownloadURL(storageRef);
-            })
+            await uploadBytes(storageRef, signUpImg)
+                .then(async (snapshot) => {
+                    console.log('Uploaded a blob or file!')
+                    publicImageUrl = await getDownloadURL(storageRef);
+                })
             //Create document in DB
             await setDoc(doc(usersRef, signUpEmail), {
                 username: signUpUser,
@@ -318,7 +418,16 @@ if (document.getElementById('signup-form') != null) {
     })
 }
 
-//Login function
+
+
+
+
+// *************************** //
+//                             //
+//  Conexión con email + pass  //
+//                             //
+// *************************** //
+
 if (document.getElementById('login-form') != null) {
     const loginForm = document.getElementById('login-form');
     loginForm.addEventListener('submit', async (e) => {
@@ -352,22 +461,40 @@ if (document.getElementById('login-form') != null) {
 }
 
 
+
+
+
+// ************************* //
+//                           //
+//  Desconexión del usuario  //
+//                           //
+// ************************* //
+
 if (document.getElementById('logout') != null) {
     const logout = document.getElementById('logout');
     //Logout function
     logout.addEventListener('click', () => {
-        signOut(auth).then(() => {
-            console.log('Logout user')
-            userData.style.cssText = '';
-            userData.innerHTML = ``;
-        }).catch((error) => {
-            console.log('Error: ', error)
-        });
+        signOut(auth)
+            .then(() => {
+                console.log('Logout user')
+                userData.style.cssText = '';
+                userData.innerHTML = ``;
+            }).catch((error) => {
+                console.log('Error: ', error)
+            });
     })
 }
 
 
-//Observe the user's state
+
+
+
+// ******************** //
+//                      //
+//  Estado del usuario  //
+//                      //
+// ******************** //
+
 auth.onAuthStateChanged(user => {
     if (user) {
         console.log('Logged user');
@@ -375,6 +502,16 @@ auth.onAuthStateChanged(user => {
         console.log('No logged user');
     }
 })
+
+
+
+
+
+// ************************** //
+//                            //
+//  Mostrar datos de usuario  //
+//                            //
+// ************************** //
 
 function showUserData(nick, email, photo) {
     userData.style.cssText = 'background-color: #73AB84;width: 50%;margin: 2rem auto;padding: 1rem;border-radius: 5px;display: flex;flex-direction: column;align-items: center';
@@ -386,42 +523,6 @@ function showUserData(nick, email, photo) {
 
 
 
-
-// ********************* //
-//                       //
-//  Registro con Google  //
-//                       //
-// ********************* //
-
-if (document.getElementById('google') != null) {
-    const signGoogle = document.getElementById('google');
-
-    signGoogle.addEventListener('click', function (event) {
-        const provider = new GoogleAuthProvider();
-        provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-
-        const authGoogle = getAuth();
-        signInWithPopup(authGoogle, provider)
-            .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                // The signed-in user info.
-                const user = result.user;
-                showUserData("n0e", user.email, user.photoURL); // TODO: pasar un nickname
-                console.log(user);
-            }).catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                const email = error.email;
-                // The AuthCredential type that was used.
-                const credential = GoogleAuthProvider.credentialFromError(error);
-                // ...
-            });
-    });
-}
 
 
 // ************ //
@@ -473,6 +574,13 @@ if (document.getElementById('player') != null) {
 }
 
 
+
+
+// ********************************************************************************************************* //
+//                                                                                                           //
+//                                             QUESTIONS                                                     //
+//                                                                                                           //
+// ********************************************************************************************************* //
 
 
 
@@ -708,12 +816,21 @@ function startQuiz() {
 
 
 
-// ******** //
-//          //
-//  Inicio  //
-//          //
-// ******** //
+// ************* //
+//               //
+//  Inicio quiz  //
+//               //
+// ************* //
 if (window.location.pathname == "/pages/question.html") {
     startQuiz();
     timeCount();
 }
+
+
+
+
+// ******************************************************************************************************* //
+//                                                                                                         //
+//                                             RESULTS                                                     //
+//                                                                                                         //
+// ******************************************************************************************************* //
