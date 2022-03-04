@@ -248,7 +248,7 @@ const questions = [
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, setDoc, getDocFromCache, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -288,7 +288,7 @@ const storage = getStorage();
 //  Registro con Google  //
 //                       //
 // ********************* //
-
+let userGoogle;
 if (document.getElementById('google') != null) {
     const signGoogle = document.getElementById('google');
 
@@ -298,17 +298,21 @@ if (document.getElementById('google') != null) {
 
         const authGoogle = getAuth();
         signInWithPopup(authGoogle, provider)
-            .then((result) => {
+            .then(async (result) => {
                 // This gives you a Google Access Token. You can use it to access the Google API.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 // The signed-in user info.
-                const user = result.user;
-                console.log(user);
-                // TODO: comprobamos en la bd si está reg y si tiene un nick, 
-                // si no tiene nick, mostramos el div de setNick para que lo guarde
-                // una vez guardado, mostramos la caja de info y las gráficas junto con botón iniciar
-                showUserData("n0e", user.email, user.photoURL); // TODO: pasar un nickname
+                userGoogle = result.user;
+                // Si no está en la BD le pedimos un nick
+                await isInDB(userGoogle.email)
+                    .then((docUser) => {
+                        if (docUser) {
+                            showUserData(docUser.data().username, userGoogle.email, userGoogle.photoURL);
+                        } else {
+                            setNickname();
+                        }
+                    });
             }).catch((error) => {
                 // Handle Errors here.
                 const errorCode = error.code;
@@ -322,49 +326,6 @@ if (document.getElementById('google') != null) {
     });
 }
 
-
-
-
-// *************************** //
-//                             //
-//  Registro con email + pass  //
-//                             //
-// *************************** //
-
-function setNick() {
-    if (document.getElementById('save') != null) {
-        let saveNick = document.getElementById('save');
-        // Si metió un nombre y mostrar las reglas del juego y el enlace
-        // TODO: Una vez metido el nombre, comprobar si existe en la bd para mostrar su gráfica de juego anterior
-        playerName = document.getElementById('player').value;
-
-        if (playerName != "") {
-            let bio = document.getElementById("bio_game");
-            bio.innerHTML = `<p>¡Hola, <strong>${playerName}</strong>!</p><p>Aquí tienes que darte vida para aparecer en la lista.</p>Las reglas son las siguientes: 
-        <ul>
-        <li>Tienes 5 segundos para leer y contestar cada pregunta.</li>
-        <li>La puntuación es el sumatorio de los segundos que te sobran en cada pregunta.</li>
-        <li>Hay 10 cuestiones diferentes. Se muestran aleatoriamente.</li>
-        <li>Cada pregunta perdida o fallada resta 1 punto.</li>
-        <li>Cada partida dura 5 preguntas.</li>
-        </ul>
-        <p><p> Calienta motoros. Has venido a jugar. <a href="./pages/question.html">¡JUEGA!</a>`;
-            bio.style.display = "block";
-            bio.style.visibility = "visible";
-        } else { // Aviso de que falta un nombre 
-            let bio = document.getElementById("bio_game");
-            bio.innerHTML = `Debes introducir un nombre para jugar`;
-            bio.style = "border: 2px solid red; border-radius: 25px; padding: 10px;";
-            bio.style.display = "block";
-            bio.style.visibility = "visible";
-        }
-    }
-}
-// TODO: los registrados con google no tienen nick. les pedimos que nos den uno y lo guardamos en firebase
-// junto con el resto de datos. si le da a guardar sin meter nick, mostramos el ELSE.
-// cuando se guarda el nick, se muestra la tabla de abajo con los datos, nick, email y foto
-// el email es necesario mostrarlo?
-// El nick es el que luego se muestra en el hall of fame
 
 
 
@@ -387,9 +348,9 @@ if (document.getElementById('signup-form') != null) {
         const signUpEmail = document.getElementById('signup-email').value;
         const signUpPassword = document.getElementById('signup-pass').value;
         const signUpUser = document.getElementById('signup-user').value;
-        const usersRef = collection(db, "users");
         const signUpImg = document.getElementById('signup-picture').files[0];
         const storageRef = ref(storage, signUpImg.name);
+        const usersRef = collection(db, "users");
         let publicImageUrl;
         try {
             //Create auth user
@@ -443,6 +404,7 @@ if (document.getElementById('login-form') != null) {
             .then((userCredential) => {
                 console.log('User authenticated')
                 const user = userCredential.user;
+                console.log(user);
                 loginForm.reset();
             })
             .then(() => {
@@ -460,6 +422,29 @@ if (document.getElementById('login-form') != null) {
     })
 }
 
+
+
+
+
+
+// ***************************************** //
+//                                           //
+//  Comprobar si existe en la base de datos  //
+//                                           //
+// ***************************************** //
+
+async function isInDB(id) {
+    const docUser = doc(db, "users", id);
+    const docSnap = await getDoc(docUser);
+
+    if (docSnap.exists()) {
+        console.log("Existe el email");
+        return docSnap;
+    } else {
+        console.log("No existe el email");
+        return false;
+    }
+}
 
 
 
@@ -525,11 +510,75 @@ function showUserData(nick, email, photo) {
 
 
 
-// ************ //
-//              //
-//  Validación  //
-//              //
-// ************ //
+// ********************************************* //
+//                                               //
+//  Pedir el nick de los registrados con Google  //
+//                                               //
+// ********************************************* //
+
+function setNickname() {
+    if (document.getElementById('nick') != null) {
+        // Mostramos el DIV para meter el nick
+        let divNick = document.getElementById('nick');
+        divNick.style.visibility = "visible";
+
+        // Comprobamos que mete el nick
+        let saveNick = document.getElementById('save');
+        saveNick.addEventListener('click', function (event) {
+            playerName = document.getElementById('player').value;
+            if (playerName != "") {
+                saveInDB(playerName);
+                divNick.style.visibility = "hidden";
+            } else {
+                let divError = document.getElementById("nick_error");
+                divError.innerHTML = `Debes introducir un nombre para jugar`;
+                divError.style = "border: 2px solid red; border-radius: 25px; padding: 10px;";
+                divError.style.display = "block";
+                divError.style.visibility = "visible";
+            }
+        });
+    }
+}
+
+
+
+if (document.getElementById('player') != null) {
+    // Cuando gana el foco el input del nick, se oculta el aviso
+    document.getElementById('player').addEventListener('focus', function (event) {
+        let nickError = document.getElementById("nick_error");
+        nickError.style = "";
+        nickError.style.visibility = "hidden";
+    });
+}
+
+
+
+
+
+// ******************************************** //
+//                                              //
+//  Guardar en BD a los registrados con Google  //
+//                                              //
+// ******************************************** //
+
+async function saveInDB(nick) {
+    const usersRef = collection(db, "users");
+    await setDoc(doc(usersRef, userGoogle.email), {
+        username: nick,
+    }).then(() => {
+        showUserData(nick,userGoogle.email, userGoogle.photoURL);
+        console.log("Usuario guardado");
+    });
+}
+
+
+
+
+// *********************************************** //
+//                                                 //
+//   //
+//                                                 //
+// *********************************************** //
 
 if (document.getElementById('start') != null) {
     document.getElementById('start').addEventListener('click', function (event) {
@@ -564,18 +613,6 @@ if (document.getElementById('start') != null) {
 
 
 
-if (document.getElementById('player') != null) {
-    // Cuando gana el foco el input del nombre, se oculta el aviso
-    document.getElementById('player').addEventListener('focus', function (event) {
-        let bio = document.getElementById("bio_game");
-        bio.style = "";
-        bio.style.visibility = "hidden";
-    });
-}
-
-
-
-
 // ********************************************************************************************************* //
 //                                                                                                           //
 //                                             QUESTIONS                                                     //
@@ -586,11 +623,11 @@ if (document.getElementById('player') != null) {
 
 // ********************** //
 //                        //
-//  Variables de usuario  // TODO: hay que meter esto en localStorage o Firebase
+//  Variables de usuario  // 
 //                        //
 // ********************** //
 
-let playerName = "";      // Nombre TODO: lo tenemos ya en el HOME hay que almacenarlo allí para leerlo aquí
+let playerName = "";      // Nombre //TODO: lo tenemos ya en el HOME hay que almacenarlo allí para leerlo aquí
 let playerScore = 0;      // Puntuación final
 let playerTime = 0;       // Tiempo total de la partida
 let answerTotal = 0;      // Contador de answers acertadas. 
