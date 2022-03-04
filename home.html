@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <h1>El hall of fame te espera</h1>
+    <h1 id="title">EL HALL OF FAME TE ESPERA</h1>
 
     <div id="signup">
         <h3>Registro</h3>
@@ -35,7 +35,7 @@
                 <label for="signup-picture">Picture: </label>
                 <input type="file" id="signup-picture" accept="image/*" name="signup-picture" required>
             </div>
-            <button type="submit">Sign Up</button>
+            <button type="submit" id="send">Sign Up</button>
         </form>
     </div>
     <div id="login">
@@ -48,14 +48,16 @@
             <div>
                 <label for="login-pass">Password: </label>
                 <input type="password" id="login-pass" name="login-pass">
+                <button type="submit">Login</button>
             </div>
-            <button type="submit">Login</button>
+           
+            <div id="logout-container">
+                <button id="logout">Logout</button>
+            </div>
         </form>
         <p id="msgerr"></p>
     </div>
-    <div id="logout-container">
-        <button id="logout">Logout</button>
-    </div>
+    
 
     <div id="nick">
         <label name="nombre">¿Cómo quieres que se te recuerde?</label>
