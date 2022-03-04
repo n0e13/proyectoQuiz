@@ -19,9 +19,6 @@
     --fs-body: 1rem;
 }
 
-
-
-
 body{
     display: flex;
     align-items: center;
@@ -29,17 +26,90 @@ body{
 }
 
 
+h3{
+    font-size: 150%;
+    text-align: center;
+    color: white
+}
+#title{
+    text-align: center;
+}
+
+
+#signup{
+    background-color: #73AB84;
+    border-radius: 30px;
+    width: 250px;
+    padding-left: 0px;
+    margin-right: 80px;
+    margin-left: 80px;
+    
+    
+}
+
+#signup-form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    color:white;
+    font-size: 150%;
+    
+    
+}
+#send{
+    margin-left: 1%;
+    width: 40%;
+ }
+
+#signup-email,
+#signup-user,
+#signup-pass,
+#signup-picture{
+    margin-bottom: 5px;  
+    width: 90px;
+}
+#signup-picture{
+    width: 500px;
+}
+
+
+#login{
+    margin-top: 40px;
+    background-color: #73AB84;
+    border-radius: 30px;
+    padding-left: 0px;
+    margin-right: 60px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 250px;
+    margin-right: 80px;
+    margin-left: 80px;
+    
+}
+
+#login-form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    color:white;
+    padding: 5px;
+    font-size: 150%;
+}
+
+#login-email{
+    margin-bottom: 5px;  
+}
+
+#logout{
+    margin-top: 5px;
+}
 
 #nick,
 #user-data {
     display: block;
     visibility: hidden;
-}
-
-
-
-h3 {
-    margin:25px;
 }
 
 
@@ -51,7 +121,9 @@ h3 {
     padding: 20px;
 }
 
-
+#user-data{
+    display: flex;   
+}
 
 
 .btn_yellow,
@@ -90,8 +162,29 @@ h3 {
 /* ------------- */
 /* Media queries */
 /* ------------- */
-/* PC  A partir de 1024px */
+/* TABLET  A partir de 768px */
 @media screen and (min-width: 768px) {
+
+    #title{
+        text-align: center;
+        margin-left: 1%;
+        margin-right: 36%;
+    }
+
+    #signup{
+        width: 250px;
+        padding-left: 0px;
+        margin-right: 40%;
+    }
+    #login{
+        margin-right: 30%;
+        margin-left: 0%;
+    }
+    #send{
+        margin-left: 1%;
+        width: 40%;
+     }
+
     #answers {
         flex-wrap: wrap;
         flex-direction: row;
@@ -111,4 +204,39 @@ h3 {
     .btn_green:hover {
         transform: scale(1.1) perspective(1px)
       }
+}
+
+/* PC  A partir de 1024px */
+@media screen and (min-width: 1024px) {
+
+    #title{
+        margin-left: 35%;
+
+        
+
+    }
+
+    #signup{
+        width: 50%;
+        margin-right: 10%;
+        margin-left: 20%;
+    }
+    #send{
+        margin-left: 10%;
+        width: 20%;
+     }
+
+    #login{
+        width: 50%;
+        margin-right: 10%;
+        margin-left: 20%;
+    }
+
+    #user-data{
+        display: flex;
+        width: 47%;
+        margin-left: 30%;
+        
+    }
+    
 }
