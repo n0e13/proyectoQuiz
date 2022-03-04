@@ -707,9 +707,9 @@ async function deleteOneQuestion(id) {
 let aTenQuestions = [];
 const aTen = [];
 async function saveTenQuestions() {
-    await getDocs(collection(db, "questions"))
-        .then((doc) => {
-            console.log(doc.data());
+    aTenQuestions = await getDocs(collection(db, "questions"));
+        /* .then((doc) => {
+            console.log(doc.data()); */
 /*             if (aTenQuestions.length < 10) {
                 let oQuestions = {
                     label: doc.data().label,
@@ -717,10 +717,11 @@ async function saveTenQuestions() {
                 };
                 aTenQuestions.push(oQuestions);
             } */
-        });
+/*         });
 
     aTen = aTenQuestions;
-    console.log("aTenQuestions " + aTenQuestions[0].label);
+    console.log("aTenQuestions " + aTenQuestions[0].label); */
+    console.log(aTenQuestions);
 }
 
 
