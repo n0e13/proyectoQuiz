@@ -1,20 +1,3 @@
-/* 
-async function questiontApi() {
-    let response = await fetch(`https://opentdb.com/api.php?amount=10&type=multiple`);
-    let data = await response.json()
-    console.log(data);
-    useApi(data)
-}
-
-function useApi(data){
-    for(let i=0;i< data.results.length;i++){
-        document.querySelector('#pinta').innerHTML= `
-        ${data.results[i].question}
-        `
-    }
-}
-questiontApi(); */
-
 const questions = [
     {
         label: '¿Quiénes fueron, según la leyenda, los dos hermanos fundadores de la ciudad de Roma?',
@@ -248,7 +231,7 @@ const questions = [
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, setDoc, getDocFromCache, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -598,6 +581,30 @@ let answerLoseFail = 0;   // Contador de respuestas perdidas o falladas. Cada un
 let maxQuestions = 9;    // Máximo de preguntas por partida. Empieza en 0.
 
 
+
+
+// ***************************** //
+//                               //
+//  Obtención de datos de API's  // 
+//                               //
+// ***************************** //
+
+/* 
+async function questiontApi() {
+    let response = await fetch(`https://opentdb.com/api.php?amount=10&type=multiple`);
+    let data = await response.json()
+    console.log(data);
+    useApi(data)
+}
+
+function useApi(data){
+    for(let i=0;i< data.results.length;i++){
+        document.querySelector('#pinta').innerHTML= `
+        ${data.results[i].question}
+        `
+    }
+}
+questiontApi(); */
 
 
 
