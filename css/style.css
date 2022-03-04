@@ -30,7 +30,8 @@ body{
 
 
 
-#nick {
+#nick,
+#user-data {
     display: block;
     visibility: hidden;
 }
