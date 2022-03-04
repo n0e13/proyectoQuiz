@@ -1,20 +1,3 @@
-/* 
-async function questiontApi() {
-    let response = await fetch(`https://opentdb.com/api.php?amount=10&type=multiple`);
-    let data = await response.json()
-    console.log(data);
-    useApi(data)
-}
-
-function useApi(data){
-    for(let i=0;i< data.results.length;i++){
-        document.querySelector('#pinta').innerHTML= `
-        ${data.results[i].question}
-        `
-    }
-}
-questiontApi(); */
-
 const questions = [
     {
         label: '¿Quiénes fueron, según la leyenda, los dos hermanos fundadores de la ciudad de Roma?',
@@ -248,7 +231,7 @@ const questions = [
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, setDoc, getDocFromCache, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, query, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -290,6 +273,9 @@ const storage = getStorage();
 // ********************* //
 let userGoogle;
 if (document.getElementById('google') != null) {
+    //Empezamos a cargar las preguntas
+    getQuestionsFromAPI();
+
     const signGoogle = document.getElementById('google');
 
     signGoogle.addEventListener('click', function (event) {
@@ -505,7 +491,7 @@ function showUserData(nick, email, photo) {
                   <p>Username: ${nick}</p>
                   <img src=${photo} alt='User profile picture'>
                  <p>Responde rápido si quieres que se te recuerde.</p>
-                 <p> Calienta motores. Has venido a jugar. <a href="./pages/question.html">¡JUEGA!</a></p>`      
+                 <p> Calienta motores. Has venido a jugar. <a href="./pages/question.html">¡JUEGA!</a></p>`
 }
 
 
@@ -601,6 +587,143 @@ let maxQuestions = 9;    // Máximo de preguntas por partida. Empieza en 0.
 
 
 
+// ********************************* //
+//                                   //
+//  Obtención de datos de las API's  // 
+//                                   //
+// ********************************* //
+
+async function getQuestionsFromAPI() {
+    const apiOpen = "https://opentdb.com/api.php?amount=10&type=multiple";
+    const apiTrivia = "https://api.trivia.willfry.co.uk/questions?limit=10";
+
+    try {
+        let aQuestionsOpen = [];
+        let aQuestionsTrivia = [];
+
+        await getDataFromAPI(apiOpen)
+            .then(data => {
+                aQuestionsOpen = data.results.map(obj => {
+                    let sQuestion = obj.question;
+                    let aAnswers = [];
+                    let oCorrect = { name: "yes", value: obj.correct_answer };
+                    aAnswers.push(oCorrect);
+                    for (let i = 0; i < obj.incorrect_answers.length; i++) {
+                        let oIncorrect = { name: "no", value: obj.incorrect_answers[i] }
+                        aAnswers.push(oIncorrect);
+                    }
+                    return { label: sQuestion, answers: aAnswers };
+                });
+            });
+
+        await getDataFromAPI(apiTrivia)
+            .then(data => {
+                aQuestionsTrivia = data.map(obj => {
+                    let sQuestion = obj.question;
+                    let aAnswers = [];
+                    let oCorrect = { name: "yes", value: obj.correctAnswer };
+                    aAnswers.push(oCorrect);
+                    // A veces hay null y más de 3 respuestas
+                    let aAux = [];
+                    for (const i of obj.incorrectAnswers) {
+                        i && aAux.push(i);
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        let oIncorrect = { name: "no", value: aAux[i] }
+                        aAnswers.push(oIncorrect);
+                    }
+                    return { label: sQuestion, answers: aAnswers };
+                });
+            });
+
+        // Junto todas las preguntas en un array y las guardo en Firestore
+        let aMixQuestions = [...questions, ...aQuestionsOpen, ...aQuestionsTrivia];
+        await saveQuestions(shuffleArray(aMixQuestions));
+
+    } catch (error) {
+        console.log('Error: ', error)
+    }
+}
+
+
+async function getDataFromAPI(api) {
+    try {
+        let response = await fetch(api);
+        let data = await response.json()
+        return data;
+    } catch (error) {
+        console.log(`ERROR: ${error.stack}`);
+    }
+}
+
+
+// ********************** //
+//                        //
+//  Mezclo las preguntas  //
+//                        //
+// ********************** //
+function shuffleArray(array) {
+    let aAux = array;
+    for (let i = aAux.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [aAux[i], aAux[j]] = [aAux[j], aAux[i]];
+    }
+    return aAux;
+}
+
+
+
+
+
+// ******************************** //
+//                                  //
+//  Guardar preguntas en Firestore  //
+//                                  //
+// ******************************** //
+
+async function saveQuestions(aQuestions) {
+    // Borro las preguntas que hay guardadas para que no se acumulen
+    await deleteQuestions();
+    await aQuestions.map(question => {
+        saveOneQuestion(question);
+    });
+    await saveTenQuestions();
+}
+
+async function saveOneQuestion(question) {
+    await addDoc(collection(db, "questions"), question);
+}
+
+async function deleteQuestions() {
+    const querySnapshot = await getDocs(collection(db, "questions"));
+    querySnapshot.forEach((doc) => {
+        deleteOneQuestion(doc.id);
+    });
+}
+
+async function deleteOneQuestion(id) {
+    await deleteDoc(doc(db, "questions", id));
+}
+
+let aTenQuestions = [];
+const aTen = [];
+async function saveTenQuestions() {
+    await getDocs(collection(db, "questions"))
+        .then((doc) => {
+            console.log(doc.data());
+/*             if (aTenQuestions.length < 10) {
+                let oQuestions = {
+                    label: doc.data().label,
+                    answers: doc.data().answers
+                };
+                aTenQuestions.push(oQuestions);
+            } */
+        });
+
+    aTen = aTenQuestions;
+    console.log("aTenQuestions " + aTenQuestions[0].label);
+}
+
 
 // ************************ //
 //                          //
@@ -639,12 +762,13 @@ if (document.getElementById('answers') != null) {
 //                   //
 // ***************** //
 
-function randomQuestion() {
+async function randomQuestion() {
     // Una posición al azar para mostrar una pregunta
+    console.log(aTenQuestions);
     let min = 0;
-    let max = questions.length - 1;
+    let max = aTenQuestions.length - 1;
     let numQuestion = Math.floor(Math.random() * (max - min + 1)) + min;
-    return questions[numQuestion];
+    return aTen[numQuestion];
 }
 
 
