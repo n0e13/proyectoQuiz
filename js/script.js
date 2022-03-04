@@ -583,14 +583,14 @@ let maxQuestions = 9;    // Máximo de preguntas por partida. Empieza en 0.
 
 
 
-// ***************************** //
-//                               //
-//  Obtención de datos de API's  // 
-//                               //
-// ***************************** //
+// ********************************* //
+//                                   //
+//  Obtención de datos de las API's  // 
+//                                   //
+// ********************************* //
 
-/* 
-async function questiontApi() {
+
+async function getQuestions() {
     let response = await fetch(`https://opentdb.com/api.php?amount=10&type=multiple`);
     let data = await response.json()
     console.log(data);
@@ -604,7 +604,9 @@ function useApi(data){
         `
     }
 }
-questiontApi(); */
+getQuestions();
+
+
 
 
 
