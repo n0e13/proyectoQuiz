@@ -6,37 +6,44 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Document</title>
 </head>
 
 <body>
-    <h1 id="title">EL HALL OF FAME TE ESPERA</h1>
+    <div class="title">
+        <h1>EL HALL OF FAME TE ESPERA</h1>
+    </div>
 
     <div id="signup">
         <h3>Registro</h3>
-        <div id="signup-google">
-            <button id="google">Google</button>
-        </div>
+        
         <form id="signup-form">
-            <div>
-                <label for="signup-email">Email: </label>
-                <input type="text" id="signup-email" name="signup-email">
+            <div class="intro">
+                <!--<label for="signup-email">Email: </label>-->
+                <input type="text" id="signup-email" name="signup-email" placeholder="Email:">
             </div>
-            <div>
-                <label for="signup-user">User name: </label>
-                <input type="text" id="signup-user" name="signup-user">
+            <div class="intro">
+                <!--<label for="signup-user">User name: </label>-->
+                <input type="text" id="signup-user" name="signup-user" placeholder="User name:">
             </div>
-            <div>
-                <label for="signup-pass">Password: </label>
-                <input type="password" id="signup-pass" name="signup-pass">
+            <div class="intro">
+                <!--<label for="signup-pass">Password: </label>-->
+                <input type="password" id="signup-pass" name="signup-pass" placeholder="Password:">
             </div>
-            <div>
-                <label for="signup-picture">Picture: </label>
+            <div > 
+                <label for="signup-picture" id="pic">Avatar: </label>
                 <input type="file" id="signup-picture" accept="image/*" name="signup-picture" required>
             </div>
-            <button type="submit" id="send">Sign Up</button>
+            
+            <button type="submit" class="intro">Sign Up</button>
         </form>
+        <div class="intro">
+            <button id="google">Google</button>
+        </div>
     </div>
     <div id="login">
         <h3>Login</h3>
