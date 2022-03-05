@@ -550,8 +550,16 @@ if (document.getElementById('player') != null) {
 
 async function saveInDB(nick) {
     const usersRef = collection(db, "users");
+    const storageRef = ref(storage, userGoogle.photoURL);
+    //Upload file to cloud storage
+    await uploadBytes(storageRef, userGoogle.photoURL)
+        .then(async (snapshot) => {
+            console.log('Uploaded a blob or file!')
+            publicImageUrl = await getDownloadURL(storageRef);
+        })
     await setDoc(doc(usersRef, userGoogle.email), {
         username: nick,
+        profile_picture: userGoogle.pho
     }).then(() => {
         showUserData(nick, userGoogle.email, userGoogle.photoURL);
         console.log("Usuario guardado");
@@ -686,11 +694,10 @@ async function saveQuestions(aQuestions) {
     await aQuestions.map(question => {
         saveOneQuestion(question);
     });
-    await saveTenQuestions();
 }
 
-async function saveOneQuestion(question) {
-    await addDoc(collection(db, "questions"), question);
+function saveOneQuestion(question) {
+    addDoc(collection(db, "questions"), question);
 }
 
 async function deleteQuestions() {
@@ -700,29 +707,27 @@ async function deleteQuestions() {
     });
 }
 
-async function deleteOneQuestion(id) {
-    await deleteDoc(doc(db, "questions", id));
+function deleteOneQuestion(id) {
+    deleteDoc(doc(db, "questions", id));
 }
 
-let aTenQuestions = [];
-const aTen = [];
-async function saveTenQuestions() {
-    aTenQuestions = await getDocs(collection(db, "questions"));
-        /* .then((doc) => {
-            console.log(doc.data()); */
-/*             if (aTenQuestions.length < 10) {
-                let oQuestions = {
-                    label: doc.data().label,
-                    answers: doc.data().answers
-                };
-                aTenQuestions.push(oQuestions);
-            } */
-/*         });
 
-    aTen = aTenQuestions;
-    console.log("aTenQuestions " + aTenQuestions[0].label); */
-    console.log(aTenQuestions);
+async function getTenQuestions() {
+    try {
+        let querySnapshot = await getDocs(collection(db, "questions"));
+        let data = querySnapshot.docs.map(function (documentSnapshot) {
+            //return documentSnapshot.data();
+            return {
+                label: documentSnapshot.data().label,
+                answers: documentSnapshot.data().answers
+            };
+        });
+        return data;
+    } catch (error) {
+        console.log(`ERROR: ${error.stack}`);
+    }
 }
+
 
 
 // ************************ //
@@ -762,13 +767,12 @@ if (document.getElementById('answers') != null) {
 //                   //
 // ***************** //
 
-async function randomQuestion() {
+function randomQuestion() {
     // Una posición al azar para mostrar una pregunta
-    console.log(aTenQuestions);
     let min = 0;
     let max = aTenQuestions.length - 1;
     let numQuestion = Math.floor(Math.random() * (max - min + 1)) + min;
-    return aTen[numQuestion];
+    return aTenQuestions[numQuestion];
 }
 
 
@@ -931,7 +935,6 @@ function startQuiz() {
     if (answerTotal < maxQuestions) {
         timeToReply = 5;
         timerAtras = setInterval(countDown, 1000);
-        console.log(timerAtras);
         printQuestion(randomQuestion());
         countDown();
     }
@@ -946,9 +949,14 @@ function startQuiz() {
 //  Inicio quiz  //
 //               //
 // ************* //
+let aTenQuestions = [];
 if (window.location.pathname == "/pages/question.html") {
-    startQuiz();
-    timeCount();
+    getTenQuestions()
+        .then((data) => {
+            aTenQuestions = data;
+            startQuiz();
+            timeCount();
+        });
 }
 
 
