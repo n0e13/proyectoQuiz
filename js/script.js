@@ -232,7 +232,7 @@ const questions = [
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, query, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-storage.js";
+import { getStorage, ref, uploadBytes, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -261,6 +261,7 @@ const user = auth.currentUser;
 const db = getFirestore(app);
 //Initialize cloudstore
 const storage = getStorage();
+const usersRef = collection(db, "users");
 
 
 
@@ -336,7 +337,6 @@ if (document.getElementById('signup-form') != null) {
         const signUpUser = document.getElementById('signup-user').value;
         const signUpImg = document.getElementById('signup-picture').files[0];
         const storageRef = ref(storage, signUpImg.name);
-        const usersRef = collection(db, "users");
         let publicImageUrl;
         try {
             //Create auth user
@@ -549,21 +549,35 @@ if (document.getElementById('player') != null) {
 // ******************************************** //
 
 async function saveInDB(nick) {
-    const usersRef = collection(db, "users");
-    const storageRef = ref(storage, userGoogle.photoURL);
-    //Upload file to cloud storage
-    await uploadBytes(storageRef, userGoogle.photoURL)
-        .then(async (snapshot) => {
-            console.log('Uploaded a blob or file!')
-            publicImageUrl = await getDownloadURL(storageRef);
-        })
-    await setDoc(doc(usersRef, userGoogle.email), {
-        username: nick,
-        profile_picture: userGoogle.pho
-    }).then(() => {
-        showUserData(nick, userGoogle.email, userGoogle.photoURL);
-        console.log("Usuario guardado");
-    });
+    let publicImageUrl;
+    let remoteimageurl = userGoogle.photoURL;
+    let nameUser = userGoogle.displayName.substring(0, userGoogle.displayName.indexOf(' '));
+
+    // Descargo el avatar
+    fetch(remoteimageurl)
+        .then(res => {
+            return res.blob();
+        }).then(async (blob) => {
+            // Lo guardo en la BD
+            const storageRef = ref(storage, `avatar_${nameUser}`);
+            await uploadBytes(storageRef, blob)
+                .then(async (snapshot) => {
+                    console.log('Avatar de Google almacenado')
+                    publicImageUrl = await getDownloadURL(storageRef);
+                })
+            // Creo el usuario de Google en la BD
+            await setDoc(doc(usersRef, userGoogle.email), {
+                username: nick,
+                email: userGoogle.email,
+                profile_picture: publicImageUrl
+            }).then(() => {
+                    //Muestro la caja de información del usuario conectado
+                    showUserData(nick, userGoogle.email, publicImageUrl);
+                    console.log("Usuario guardado");
+                });
+        }).catch(error => {
+            console.error(error);
+        });
 }
 
 
