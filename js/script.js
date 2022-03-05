@@ -232,7 +232,7 @@ const questions = [
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, query, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-storage.js";
+import { getStorage, ref, uploadBytes, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -261,6 +261,7 @@ const user = auth.currentUser;
 const db = getFirestore(app);
 //Initialize cloudstore
 const storage = getStorage();
+const usersRef = collection(db, "users");
 
 
 
@@ -336,7 +337,6 @@ if (document.getElementById('signup-form') != null) {
         const signUpUser = document.getElementById('signup-user').value;
         const signUpImg = document.getElementById('signup-picture').files[0];
         const storageRef = ref(storage, signUpImg.name);
-        const usersRef = collection(db, "users");
         let publicImageUrl;
         try {
             //Create auth user
@@ -550,13 +550,35 @@ if (document.getElementById('player') != null) {
 // ******************************************** //
 
 async function saveInDB(nick) {
-    const usersRef = collection(db, "users");
-    await setDoc(doc(usersRef, userGoogle.email), {
-        username: nick,
-    }).then(() => {
-        showUserData(nick, userGoogle.email, userGoogle.photoURL);
-        console.log("Usuario guardado");
-    });
+    let publicImageUrl;
+    let remoteimageurl = userGoogle.photoURL;
+    let nameUser = userGoogle.displayName.substring(0, userGoogle.displayName.indexOf(' '));
+
+    // Descargo el avatar
+    fetch(remoteimageurl)
+        .then(res => {
+            return res.blob();
+        }).then(async (blob) => {
+            // Lo guardo en la BD
+            const storageRef = ref(storage, `avatar_${nameUser}`);
+            await uploadBytes(storageRef, blob)
+                .then(async (snapshot) => {
+                    console.log('Avatar de Google almacenado')
+                    publicImageUrl = await getDownloadURL(storageRef);
+                })
+            // Creo el usuario de Google en la BD
+            await setDoc(doc(usersRef, userGoogle.email), {
+                username: nick,
+                email: userGoogle.email,
+                profile_picture: publicImageUrl
+            }).then(() => {
+                    //Muestro la caja de información del usuario conectado
+                    showUserData(nick, userGoogle.email, publicImageUrl);
+                    console.log("Usuario guardado");
+                });
+        }).catch(error => {
+            console.error(error);
+        });
 }
 
 
@@ -687,11 +709,10 @@ async function saveQuestions(aQuestions) {
     await aQuestions.map(question => {
         saveOneQuestion(question);
     });
-    await saveTenQuestions();
 }
 
-async function saveOneQuestion(question) {
-    await addDoc(collection(db, "questions"), question);
+function saveOneQuestion(question) {
+    addDoc(collection(db, "questions"), question);
 }
 
 async function deleteQuestions() {
@@ -701,28 +722,27 @@ async function deleteQuestions() {
     });
 }
 
-async function deleteOneQuestion(id) {
-    await deleteDoc(doc(db, "questions", id));
+function deleteOneQuestion(id) {
+    deleteDoc(doc(db, "questions", id));
 }
 
-let aTenQuestions = [];
-const aTen = [];
-async function saveTenQuestions() {
-    await getDocs(collection(db, "questions"))
-        .then((doc) => {
-            console.log(doc.data());
-/*             if (aTenQuestions.length < 10) {
-                let oQuestions = {
-                    label: doc.data().label,
-                    answers: doc.data().answers
-                };
-                aTenQuestions.push(oQuestions);
-            } */
+
+async function getTenQuestions() {
+    try {
+        let querySnapshot = await getDocs(collection(db, "questions"));
+        let data = querySnapshot.docs.map(function (documentSnapshot) {
+            //return documentSnapshot.data();
+            return {
+                label: documentSnapshot.data().label,
+                answers: documentSnapshot.data().answers
+            };
         });
-
-    aTen = aTenQuestions;
-    console.log("aTenQuestions " + aTenQuestions[0].label);
+        return data;
+    } catch (error) {
+        console.log(`ERROR: ${error.stack}`);
+    }
 }
+
 
 
 // ************************ //
@@ -762,13 +782,12 @@ if (document.getElementById('answers') != null) {
 //                   //
 // ***************** //
 
-async function randomQuestion() {
+function randomQuestion() {
     // Una posición al azar para mostrar una pregunta
-    console.log(aTenQuestions);
     let min = 0;
     let max = aTenQuestions.length - 1;
     let numQuestion = Math.floor(Math.random() * (max - min + 1)) + min;
-    return aTen[numQuestion];
+    return aTenQuestions[numQuestion];
 }
 
 
@@ -931,7 +950,6 @@ function startQuiz() {
     if (answerTotal < maxQuestions) {
         timeToReply = 5;
         timerAtras = setInterval(countDown, 1000);
-        console.log(timerAtras);
         printQuestion(randomQuestion());
         countDown();
     }
@@ -946,9 +964,14 @@ function startQuiz() {
 //  Inicio quiz  //
 //               //
 // ************* //
+let aTenQuestions = [];
 if (window.location.pathname == "/pages/question.html") {
-    startQuiz();
-    timeCount();
+    getTenQuestions()
+        .then((data) => {
+            aTenQuestions = data;
+            startQuiz();
+            timeCount();
+        });
 }
 
 
