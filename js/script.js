@@ -486,7 +486,7 @@ auth.onAuthStateChanged(user => {
 
 function showUserData(nick, email, photo) {
     userData.style.cssText = 'background-color: #73AB84;width: 70%;margin: 2rem auto;padding: 1rem;border-radius: 30px;display: flex;flex-direction: column; visibility:visible';
-    
+
     userData.innerHTML = `<h3>User Data</h3>
                   <p>Username: ${nick}</p>
                   <img src=${photo} alt='User profile picture'>
@@ -572,10 +572,10 @@ async function saveInDB(nick) {
                 email: userGoogle.email,
                 profile_picture: publicImageUrl
             }).then(() => {
-                    //Muestro la caja de información del usuario conectado
-                    showUserData(nick, userGoogle.email, publicImageUrl);
-                    console.log("Usuario guardado");
-                });
+                //Muestro la caja de información del usuario conectado
+                showUserData(nick, userGoogle.email, publicImageUrl);
+                console.log("Usuario guardado");
+            });
         }).catch(error => {
             console.error(error);
         });
@@ -914,27 +914,39 @@ function countDown() {
 //  Contador de la partida  //
 //                          //
 // ************************ //
-let eCont = "";
+
+let lblMinutes = "";
+let lblSeconds = "";
+let totalSeconds = 0;
 if (document.getElementById('contador') != null) {
-    eCont = document.getElementById('contador');
+    lblMinutes = document.getElementById("minutes");
+    lblSeconds = document.getElementById("seconds");
     setInterval(timeCount, 1000);
 }
 
-let min = 0;
-let segundos = 0;
+
+
+
+
 function timeCount() {
-    if ((segundos == 60) && (min < 10)) {
-        min++;
-        segundos = 0;
-        eCont.innerHTML = `Llevas jugando 0${min}:00`;
-    } else if (segundos < 10) {
-        eCont.innerHTML = `Llevas jugando 0${min}:0${segundos}`;
-        segundos++;
+    totalSeconds++;
+    lblSeconds.innerHTML = pad(totalSeconds % 60);
+    lblMinutes.innerHTML = pad(parseInt(totalSeconds / 60));
+}
+
+
+
+
+
+function pad(value) {
+    let sValue = value + "";
+    if (sValue.length < 2) {
+        return "0" + sValue;
     } else {
-        eCont.innerHTML = `Llevas jugando 0${min}:${segundos}`;
-        segundos++;
+        return sValue;
     }
 }
+
 
 
 
@@ -948,7 +960,7 @@ function timeCount() {
 
 function startQuiz() {
     if (answerTotal < maxQuestions) {
-        timeToReply = 5;
+        timeToReply = 5;  
         timerAtras = setInterval(countDown, 1000);
         printQuestion(randomQuestion());
         countDown();
