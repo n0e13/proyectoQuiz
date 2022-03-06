@@ -725,7 +725,6 @@ async function saveTenQuestions() {
         });
 
     aTen = aTenQuestions;
-    console.log("aTenQuestions " + aTenQuestions[0].label);
 }
 
 
@@ -772,6 +771,7 @@ async function randomQuestion() {
     let min = 0;
     let max = aTenQuestions.length - 1;
     let numQuestion = Math.floor(Math.random() * (max - min + 1)) + min;
+    console.log(aTen[numQuestion])
     return aTen[numQuestion];
 }
 
@@ -786,6 +786,10 @@ async function randomQuestion() {
 // ******************* //
 
 function printQuestion(question) {
+    let info;
+    let questionsT = question.then(function(result){
+        return result;
+    }); 
     if (document.getElementById('question') != null) {
         document.getElementById('question').innerHTML = printTitle(question);
     }
@@ -820,6 +824,7 @@ function printTitle(question) {
 
 function printAnswers(question) {
     let aAnswers = question.answers;
+    console.log(aAnswers)
     let sAnswers = "";
     for (let i = 0; i < aAnswers.length; i++) {
         sAnswers += printAnswer(aAnswers[i], i);
