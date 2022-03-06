@@ -786,16 +786,15 @@ async function randomQuestion() {
 // ******************* //
 
 function printQuestion(question) {
-    let info;
-    let questionsT = question.then(function(result){
-        return result;
-    }); 
+   question.then(function(result){
     if (document.getElementById('question') != null) {
-        document.getElementById('question').innerHTML = printTitle(question);
+        document.getElementById('question').innerHTML = printTitle(result);
     }
     if (document.getElementById('answers') != null) {
-        document.getElementById('answers').innerHTML = printAnswers(question);
+        document.getElementById('answers').innerHTML = printAnswers(result);
     }
+    }); 
+   
 }
 
 
@@ -956,9 +955,10 @@ function startQuiz() {
 //               //
 // ************* //
 if (window.location.pathname == "/pages/question.html") {
-    getQuestionsFromAPI();
-    startQuiz();
-    timeCount();
+    getQuestionsFromAPI().then(()=>{
+        startQuiz();
+        timeCount();
+    });
 }
 
 
