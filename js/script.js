@@ -485,7 +485,7 @@ auth.onAuthStateChanged(user => {
 // ************************** //
 
 function showUserData(nick, email, photo) {
-    userData.style.cssText = 'background-color: #73AB84;width: 70%;margin: 2rem auto;padding: 1rem;border-radius: 30px;display: flex;flex-direction: column; visibility:visible';
+    //userData.style.cssText = 'background-color: #73AB84;width: 70%;margin: 2rem auto;padding: 1rem;border-radius: 30px;display: flex;flex-direction: column; visibility:visible';
     
     userData.innerHTML = `<h3>User Data</h3>
                   <p>Username: ${nick}</p>
@@ -597,12 +597,13 @@ async function getQuestionsFromAPI() {
     const apiOpen = "https://opentdb.com/api.php?amount=10&type=multiple";
     const apiTrivia = "https://api.trivia.willfry.co.uk/questions?limit=10";
 
-    try {
+    //try {
         let aQuestionsOpen = [];
         let aQuestionsTrivia = [];
 
         await getDataFromAPI(apiOpen)
             .then(data => {
+                console.log("hola")
                 aQuestionsOpen = data.results.map(obj => {
                     let sQuestion = obj.question;
                     let aAnswers = [];
@@ -640,9 +641,9 @@ async function getQuestionsFromAPI() {
         let aMixQuestions = [...questions, ...aQuestionsOpen, ...aQuestionsTrivia];
         await saveQuestions(shuffleArray(aMixQuestions));
 
-    } catch (error) {
-        console.log('Error: ', error)
-    }
+    // } catch (error) {
+    //     console.log('Error: ', error)
+    // }
 }
 
 
@@ -706,18 +707,21 @@ async function deleteOneQuestion(id) {
 }
 
 let aTenQuestions = [];
-const aTen = [];
+let aTen = [];
 async function saveTenQuestions() {
     await getDocs(collection(db, "questions"))
         .then((doc) => {
-            console.log(doc.data());
-/*             if (aTenQuestions.length < 10) {
-                let oQuestions = {
-                    label: doc.data().label,
-                    answers: doc.data().answers
-                };
-                aTenQuestions.push(oQuestions);
-            } */
+            doc.forEach(doc => {
+                if (aTenQuestions.length < 10) {
+                    let oQuestions = {
+                        label: doc.data().label,
+                        answers: doc.data().answers
+                    };
+                    aTenQuestions.push(oQuestions)
+                }
+            })
+/*            
+            */
         });
 
     aTen = aTenQuestions;
@@ -947,6 +951,7 @@ function startQuiz() {
 //               //
 // ************* //
 if (window.location.pathname == "/pages/question.html") {
+    getQuestionsFromAPI();
     startQuiz();
     timeCount();
 }

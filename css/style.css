@@ -30,7 +30,7 @@ body{
 h3{
     font-size: 150%;
     text-align: center;
-    color: white
+    color: black;
 }
 .title{
     display: flex;
@@ -39,6 +39,26 @@ h3{
     text-align: center;
     
 }
+.intro{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px; 
+    margin-top: 5px;
+}
+
+/*************/
+/* Botones */
+/*************/
+.intro2{
+    color:white;
+    font-size: medium;
+    background-color: #00C897;
+    border: black solid 2px; 
+    border-radius: 15px;
+    width: 50%;
+    margin-top: 10px;
+}
+
 
 
 #signup{
@@ -69,7 +89,7 @@ h3{
     flex-direction: column;
     padding: 10px;
     margin-top: 10px;
-    color:white;
+    color:black;
     font-size: 150%;
     
     
@@ -78,24 +98,6 @@ h3{
     margin-left: 1%;
     width: 40%;
  }
-
-.intro{
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5px; 
-    margin-top: 5px;
-}
-
-/*Botones */
-.intro2{
-    color:white;
-    font-size: medium;
-    background-color: #00C897;
-    border: black solid 2px; 
-    border-radius: 15px;
-    width: 50%;
-    margin-top: 10px;
-}
 
 #google{
     color:white;
@@ -107,11 +109,6 @@ h3{
     margin-left: 20px;
     margin-bottom: 10px;
 }
-
-
-
-
-
 
 
 #login{
@@ -154,7 +151,6 @@ h3{
 }
 
 
-
 #logout{
     margin-top: 5px;
     color:white;
@@ -171,6 +167,26 @@ h3{
 #user-data {
     display: block;
     visibility: hidden;
+    font-size: 17px;
+}
+
+#user-data{
+    display: flex;   
+    background-color: #73AB84;
+    width: 70%;
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    visibility:visible;
+    border: black solid 4px;
+}
+
+
+#photo {
+    border: black solid 4px;
+    
 }
 
 
@@ -181,11 +197,6 @@ h3{
     width: 85%;
     padding: 20px;
 }
-
-#user-data{
-    display: flex;   
-}
-
 
 .btn_yellow,
 .btn_blue,
@@ -220,6 +231,7 @@ h3{
     font-size: 30px;
 }
 
+
 /* ------------- */
 /* Media queries */
 /* ------------- */
@@ -250,6 +262,7 @@ h3{
         flex-wrap: wrap;
         flex-direction: row;
         justify-content: space-around;
+        color:black;
     }
     .btn_yellow,
     .btn_blue,
@@ -272,9 +285,6 @@ h3{
 
     #title{
         margin-left: 35%;
-
-        
-
     }
 
     #signup{
