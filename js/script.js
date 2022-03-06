@@ -683,6 +683,7 @@ async function getDataFromAPI(api) {
 //  Mezclo las preguntas  //
 //                        //
 // ********************** //
+
 function shuffleArray(array) {
     let aAux = array;
     for (let i = aAux.length - 1; i > 0; i--) {
@@ -833,7 +834,7 @@ function printTitle(question) {
 // ******************************* //
 
 function printAnswers(question) {
-    let aAnswers = question.answers;
+    let aAnswers = shuffleArray(question.answers);
     let sAnswers = "";
     for (let i = 0; i < aAnswers.length; i++) {
         sAnswers += printAnswer(aAnswers[i], i);
