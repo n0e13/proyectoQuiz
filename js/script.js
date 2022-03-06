@@ -1,6 +1,6 @@
 const questions = [
     {
-        label: '¿Quiénes fueron, según la leyenda, los dos hermanos fundadores de la ciudad de Roma?',
+        label: '¿Qué cordillera separa Europa de Asia?',
         answers: [
             {
                 name: 'no',
