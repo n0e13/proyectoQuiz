@@ -262,7 +262,8 @@ const db = getFirestore(app);
 //Initialize cloudstore
 const storage = getStorage();
 const usersRef = collection(db, "users");
-
+const questionsRef = collection(db, "questions");
+const gamesRef = collection(db, "games");
 
 
 
@@ -361,7 +362,6 @@ if (document.getElementById('signup-form') != null) {
         } catch (error) {
             console.log('Error: ', error)
         }
-
     })
 }
 
@@ -554,31 +554,27 @@ async function saveInDB(nick) {
     let remoteimageurl = userGoogle.photoURL;
     let nameUser = userGoogle.displayName.substring(0, userGoogle.displayName.indexOf(' '));
 
-    // Descargo el avatar
-    fetch(remoteimageurl)
-        .then(res => {
-            return res.blob();
-        }).then(async (blob) => {
-            // Lo guardo en la BD
-            const storageRef = ref(storage, `avatar_${nameUser}`);
-            await uploadBytes(storageRef, blob)
-                .then(async (snapshot) => {
-                    console.log('Avatar de Google almacenado')
-                    publicImageUrl = await getDownloadURL(storageRef);
-                })
-            // Creo el usuario de Google en la BD
-            await setDoc(doc(usersRef, userGoogle.email), {
-                username: nick,
-                email: userGoogle.email,
-                profile_picture: publicImageUrl
-            }).then(() => {
-                //Muestro la caja de información del usuario conectado
-                showUserData(nick, userGoogle.email, publicImageUrl);
-                console.log("Usuario guardado");
-            });
-        }).catch(error => {
-            console.error(error);
+    try {
+        // Descargo el avatar
+        const img = await fetch(remoteimageurl);
+        const blob = await img.blob();
+        // Lo almaceno en Storage
+        const storageRef = ref(storage, `avatar_${nameUser}`);
+        const snapshot = await uploadBytes(storageRef, blob);
+        publicImageUrl = await getDownloadURL(storageRef);
+        // Lo guardo en Firestore
+        await setDoc(doc(usersRef, userGoogle.email), {
+            username: nick,
+            email: userGoogle.email,
+            profile_picture: publicImageUrl
+        }).then(() => {
+            //Muestro la caja de información del usuario conectado
+            showUserData(nick, userGoogle.email, publicImageUrl);
+            console.log("Usuario guardado");
         });
+    } catch (error) {
+        console.log(`ERROR: ${error.stack}`);
+    }
 }
 
 
@@ -634,7 +630,10 @@ async function getQuestionsFromAPI() {
                         let oIncorrect = { name: "no", value: obj.incorrect_answers[i] }
                         aAnswers.push(oIncorrect);
                     }
-                    return { label: sQuestion, answers: aAnswers };
+                    return {
+                        label: sQuestion,
+                        answers: aAnswers
+                    };
                 });
             });
 
@@ -643,25 +642,38 @@ async function getQuestionsFromAPI() {
                 aQuestionsTrivia = data.map(obj => {
                     let sQuestion = obj.question;
                     let aAnswers = [];
-                    let oCorrect = { name: "yes", value: obj.correctAnswer };
+
+                    let oCorrect = {
+                        name: "yes",
+                        value: obj.correctAnswer
+                    };
                     aAnswers.push(oCorrect);
-                    // A veces hay null y más de 3 respuestas
+
+                    // A veces hay null
                     let aAux = [];
                     for (const i of obj.incorrectAnswers) {
                         i && aAux.push(i);
                     }
+
+                    // Puede que haya más de 3 respuestas
                     for (let i = 0; i < 3; i++) {
-                        let oIncorrect = { name: "no", value: aAux[i] }
+                        let oIncorrect = {
+                            name: "no",
+                            value: aAux[i]
+                        }
                         aAnswers.push(oIncorrect);
                     }
-                    return { label: sQuestion, answers: aAnswers };
+
+                    return {
+                        label: sQuestion,
+                        answers: aAnswers
+                    };
                 });
             });
 
         // Junto todas las preguntas en un array y las guardo en Firestore
         let aMixQuestions = [...questions, ...aQuestionsOpen, ...aQuestionsTrivia];
         await saveQuestions(shuffleArray(aMixQuestions));
-
     } catch (error) {
         console.log('Error: ', error)
     }
@@ -706,17 +718,17 @@ function shuffleArray(array) {
 async function saveQuestions(aQuestions) {
     // Borro las preguntas que hay guardadas para que no se acumulen
     await deleteQuestions();
-    await aQuestions.map(question => {
+    await aQuestions.forEach(question => {
         saveOneQuestion(question);
     });
 }
 
 function saveOneQuestion(question) {
-    addDoc(collection(db, "questions"), question);
+    addDoc(questionsRef, question);
 }
 
 async function deleteQuestions() {
-    const querySnapshot = await getDocs(collection(db, "questions"));
+    const querySnapshot = await getDocs(questionsRef);
     querySnapshot.forEach((doc) => {
         deleteOneQuestion(doc.id);
     });
@@ -729,7 +741,7 @@ function deleteOneQuestion(id) {
 
 async function getTenQuestions() {
     try {
-        let querySnapshot = await getDocs(collection(db, "questions"));
+        let querySnapshot = await getDocs(questionsRef);
         let data = querySnapshot.docs.map(function (documentSnapshot) {
             //return documentSnapshot.data();
             return {
@@ -960,7 +972,7 @@ function pad(value) {
 
 function startQuiz() {
     if (answerTotal < maxQuestions) {
-        timeToReply = 5;  
+        timeToReply = 5;
         timerAtras = setInterval(countDown, 1000);
         printQuestion(randomQuestion());
         countDown();
