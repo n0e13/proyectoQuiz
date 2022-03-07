@@ -19,27 +19,159 @@
     --fs-body: 1rem;
 }
 
-
-
-
 body{
     display: flex;
     align-items: center;
     flex-direction: column;
+    font-family: 'Permanent Marker', cursive;
 }
 
 
+h3{
+    font-size: 150%;
+    text-align: center;
+    color: white
+}
+
+.title{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    text-align: center;
+    
+}
+
+
+#signup{
+    background-color: #019267;
+    border-radius: 30px;
+    width: 250px;
+    padding-left: 0px;
+    margin-right: 80px;
+    margin-left: 80px;
+    border: black solid 4px; 
+    position: relative; 
+}
+
+#signup::after{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    content: '';
+    background: linear-gradient(to right, #59c173, #a17fe0, #5d26c1);
+    width: 100%;
+    height: 100%;
+    filter:blur(20px);
+    z-index:-1;
+}
+
+#signup-form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    color:white;
+    font-size: 150%;
+    
+    
+}
+#send{
+    margin-left: 1%;
+    width: 40%;
+ }
+
+.intro{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px; 
+    margin-top: 5px;
+}
+
+/*Botones */
+.intro2{
+    color:white;
+    font-size: medium;
+    background-color: #00C897;
+    border: black solid 2px; 
+    border-radius: 15px;
+    width: 50%;
+    margin-top: 10px;
+}
+
+#google{
+    color:white;
+    font-size: medium;
+    background-color: #00C897;
+    border: black solid 2px; 
+    border-radius: 15px;
+    width: 40%;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+#login{
+    background-color: #019267;
+    border-radius: 30px;
+    width: 250px;
+    padding-left: 0px;
+    margin-right: 80px;
+    margin-left: 80px;
+    border: black solid 4px; 
+    position: relative; 
+    margin-top: 30px;
+    
+}
+
+#login::after{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    content: '';
+    background: linear-gradient(to right, #59c173, #a17fe0, #5d26c1);
+    width: 100%;
+    height: 100%;
+    filter:blur(20px);
+    z-index:-1;
+}
+
+#login-form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    color:white;
+    padding: 5px;
+    font-size: 150%;
+}
+
+#login-email{
+    margin-bottom: 5px;  
+}
+
+
+
+#logout{
+    margin-top: 5px;
+    color:white;
+    font-size: medium;
+    background-color: #00C897;
+    border: black solid 2px; 
+    border-radius: 15px;
+    width: 50%;
+    margin-top: 10px;
+
+}
 
 #nick,
 #user-data {
     display: block;
     visibility: hidden;
-}
-
-
-
-h3 {
-    margin:25px;
 }
 
 
@@ -51,7 +183,9 @@ h3 {
     padding: 20px;
 }
 
-
+#user-data{
+    display: flex;   
+}
 
 
 .btn_yellow,
@@ -90,8 +224,29 @@ h3 {
 /* ------------- */
 /* Media queries */
 /* ------------- */
-/* PC  A partir de 1366px */
+/* TABLET  A partir de 768px */
 @media screen and (min-width: 768px) {
+
+    #title{
+        text-align: center;
+        margin-left: 1%;
+        margin-right: 36%;
+    }
+
+    #signup{
+        width: 250px;
+        padding-left: 0px;
+        margin-right: 40%;
+    }
+    #login{
+        margin-right: 30%;
+        margin-left: 0%;
+    }
+    #send{
+        margin-left: 1%;
+        width: 40%;
+     }
+
     #answers {
         flex-wrap: wrap;
         flex-direction: row;
@@ -111,4 +266,39 @@ h3 {
     .btn_green:hover {
         transform: scale(1.1) perspective(1px)
       }
+}
+
+/* PC  A partir de 1024px */
+@media screen and (min-width: 1024px) {
+
+    #title{
+        margin-left: 35%;
+
+        
+
+    }
+
+    #signup{
+        width: 50%;
+        margin-right: 10%;
+        margin-left: 20%;
+    }
+    #send{
+        margin-left: 10%;
+        width: 20%;
+     }
+
+    #login{
+        width: 50%;
+        margin-right: 10%;
+        margin-left: 20%;
+    }
+
+    #user-data{
+        display: flex;
+        width: 47%;
+        margin-left: 30%;
+        
+    }
+    
 }
