@@ -296,7 +296,13 @@ if (document.getElementById('google') != null) {
                 await isInDB(userGoogle.email)
                     .then((docUser) => {
                         if (docUser) {
-                            showUserData(docUser.data().username, userGoogle.email, userGoogle.photoURL);
+                            // Guardo los datos en sesión
+                            //TODO: coger de la sesión los datos y no pasarlos por parámetro al showUserData
+                            sessionStorage.setItem("name", docUser.data().username);
+                            sessionStorage.setItem("avatar", docUser.data().profile_picture);
+                            // Muestro la caja de información
+                            showUserData(docUser.data().username, docUser.data().email, docUser.data().profile_picture);
+
                         } else {
                             setNickname();
                         }
@@ -386,7 +392,7 @@ if (document.getElementById('login-form') != null) {
         //Search a document that matches with our ref
         const docSnap = await getDoc(docRef);
 
-        signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+        await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
             .then((userCredential) => {
                 console.log('User authenticated')
                 const user = userCredential.user;
@@ -395,6 +401,10 @@ if (document.getElementById('login-form') != null) {
             })
             .then(() => {
                 if (docSnap.exists()) {
+                    //TODO: coger de la sesión los datos y no pasarlos por parámetro al showUserData
+                    sessionStorage.setItem("name", docUser.data().username);
+                    sessionStorage.setItem("avatar", docUser.data().profile_picture);
+                    // Muestro la caja de información
                     showUserData(docSnap.data().username, docSnap.data().email, docSnap.data().profile_picture);
                 } else {
                     console.log("No such document!");
@@ -425,6 +435,7 @@ async function isInDB(id) {
 
     if (docSnap.exists()) {
         console.log("Existe el email");
+        // TODO: Buscar las partidas para la gráfica
         return docSnap;
     } else {
         console.log("No existe el email");
@@ -624,10 +635,16 @@ async function getQuestionsFromAPI() {
                 aQuestionsOpen = data.results.map(obj => {
                     let sQuestion = obj.question;
                     let aAnswers = [];
-                    let oCorrect = { name: "yes", value: obj.correct_answer };
+                    let oCorrect = {
+                        name: "yes",
+                        value: obj.correct_answer
+                    };
                     aAnswers.push(oCorrect);
                     for (let i = 0; i < obj.incorrect_answers.length; i++) {
-                        let oIncorrect = { name: "no", value: obj.incorrect_answers[i] }
+                        let oIncorrect = {
+                            name: "no",
+                            value: obj.incorrect_answers[i]
+                        }
                         aAnswers.push(oIncorrect);
                     }
                     return {
