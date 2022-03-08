@@ -18,19 +18,25 @@
     --fs-h3: 1.25rem;
     --fs-body: 1rem;
 }
-
+*{
+    font-family: 'Permanent Marker', cursive !important;
+}
+html{min-width: 320px;}
 body{
     display: flex;
     align-items: center;
     flex-direction: column;
-    font-family: 'Permanent Marker', cursive;
+    min-width: 320px;
 }
-
 
 h3{
     font-size: 150%;
     text-align: center;
-    color: white
+    color: black;
+}
+
+h4{
+    text-align: center;
 }
 
 .title{
@@ -41,45 +47,6 @@ h3{
     
 }
 
-
-#signup{
-    background-color: #019267;
-    border-radius: 30px;
-    width: 250px;
-    padding-left: 0px;
-    margin-right: 80px;
-    margin-left: 80px;
-    border: black solid 4px; 
-    position: relative; 
-}
-
-#signup::after{
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    content: '';
-    background: linear-gradient(to right, #59c173, #a17fe0, #5d26c1);
-    width: 100%;
-    height: 100%;
-    filter:blur(20px);
-    z-index:-1;
-}
-
-#signup-form{
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin-top: 10px;
-    color:white;
-    font-size: 150%;
-    
-    
-}
-#send{
-    margin-left: 1%;
-    width: 40%;
- }
-
 .intro{
     display: flex;
     justify-content: center;
@@ -87,16 +54,69 @@ h3{
     margin-top: 5px;
 }
 
-/*Botones */
+
+/*************/
+/* Botones */
+/*************/
+
+.botonCenter{
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    
+}
+
 .intro2{
     color:white;
     font-size: medium;
     background-color: #00C897;
     border: black solid 2px; 
     border-radius: 15px;
-    width: 50%;
+    width: 60%;
     margin-top: 10px;
 }
+
+.text-label{
+    display: flex;
+    justify-content: center;
+    font-size: 150px;
+
+}
+
+.labelCenter{
+    margin-left: 50px;
+}
+
+#signup{
+    background-color: #63A9CF;
+    border-radius: 30px;
+    width: 250px;
+    padding-left: 0px;
+    margin-right: 80px;
+    margin-left: 80px;
+    box-shadow: rgb(85, 85, 85) 4px 4px 12px;
+   
+}
+
+
+#signup-form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    color:black;
+    font-size: 150%;
+    
+    
+}
+#signup-picture{
+    size: 0.5m !important;
+}
+
+#send{
+    margin-left: 1%;
+    width: 40%;
+ }
 
 #google{
     color:white;
@@ -105,40 +125,23 @@ h3{
     border: black solid 2px; 
     border-radius: 15px;
     width: 40%;
-    margin-left: 20px;
     margin-bottom: 10px;
 }
 
 
-
-
-
-
-
 #login{
-    background-color: #019267;
+    background-color: #63A9CF;
     border-radius: 30px;
     width: 250px;
     padding-left: 0px;
     margin-right: 80px;
     margin-left: 80px;
-    border: black solid 4px; 
-    position: relative; 
+    border: #63A9CF solid 4px; 
     margin-top: 30px;
+    box-shadow: rgb(10, 10, 10) 4px 4px 12px;
     
 }
 
-#login::after{
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    content: '';
-    background: linear-gradient(to right, #59c173, #a17fe0, #5d26c1);
-    width: 100%;
-    height: 100%;
-    filter:blur(20px);
-    z-index:-1;
-}
 
 #login-form{
     display: flex;
@@ -155,7 +158,6 @@ h3{
 }
 
 
-
 #logout{
     margin-top: 5px;
     color:white;
@@ -164,15 +166,39 @@ h3{
     border: black solid 2px; 
     border-radius: 15px;
     width: 50%;
-    margin-top: 10px;
-
 }
 
 #nick,
 #user-data {
     display: block;
     visibility: hidden;
+    font-size: 17px;
 }
+
+#user-data{
+    display: flex;   
+    background-color: #63A9CF;
+    width: 70%;
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    visibility:visible;
+    box-shadow: rgb(10, 10, 10) 4px 4px 12px;
+}
+
+#user-data img{
+    width: 100%;
+    border-radius: 60%;
+}
+
+/*
+#photo {
+    border: black solid 4px;
+    
+}
+*/
 
 
 #answers {
@@ -183,21 +209,18 @@ h3{
     padding: 20px;
 }
 
-#user-data{
-    display: flex;   
-}
-
-
 .btn_yellow,
 .btn_blue,
 .btn_orange,
 .btn_green {
     font-size: 1.5em;
-    width: 75%;
+    width: 95%;
     height: 70px;
     margin: 10px;
     border: 0px solid transparent;
     border-radius: 10px;
+    box-shadow: rgb(85, 85, 85) 4px 4px 12px;
+    
 }
 
 .btn_orange {
@@ -221,26 +244,28 @@ h3{
     font-size: 30px;
 }
 
+
 /* ------------- */
 /* Media queries */
 /* ------------- */
 /* TABLET  A partir de 768px */
 @media screen and (min-width: 768px) {
 
-    #title{
+    .title{
+        display: flex;
+        flex-direction: row;
+        align-content: center;
         text-align: center;
-        margin-left: 1%;
-        margin-right: 36%;
+        
     }
 
     #signup{
-        width: 250px;
-        padding-left: 0px;
-        margin-right: 40%;
+        width: 550px;
     }
     #login{
         margin-right: 30%;
-        margin-left: 0%;
+        margin-left: 30%;
+        width: 550px;
     }
     #send{
         margin-left: 1%;
@@ -251,7 +276,13 @@ h3{
         flex-wrap: wrap;
         flex-direction: row;
         justify-content: space-around;
+        color:black;
     }
+
+    .labelCenter{
+        margin-left: 200px;
+    }
+
     .btn_yellow,
     .btn_blue,
     .btn_orange,
@@ -271,11 +302,16 @@ h3{
 /* PC  A partir de 1024px */
 @media screen and (min-width: 1024px) {
 
-    #title{
-        margin-left: 35%;
+    .labelCenter{
+        margin-left: 300px;
+    }
 
+    .title{
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        text-align: center;
         
-
     }
 
     #signup{
