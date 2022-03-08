@@ -34,14 +34,17 @@
                 <!--<label for="signup-pass">Password: </label>-->
                 <input type="password" id="signup-pass" name="signup-pass" placeholder="Password:">
             </div>
-            <div > 
-                <label for="signup-picture" id="pic">Avatar: </label>
-                <input type="file" id="signup-picture" accept="image/*" name="signup-picture" required>
+                
+            <div class="labelCenter">
+                <label for="signup-picture"><h6>Sube tu imagen</h6></label>
+                <input type="file" id="signup-picture" accept="image/*" name="signup-picture" required hidden>
+            </div>
+            <div class="botonCenter">
+                <button type="submit" class="intro2">Sign Up</button>
             </div>
             
-            <button type="submit" class="intro2">Sign Up</button>
         </form>
-        <div>
+        <div class="botonCenter">
             <button id="google">Google</button>
         </div>
     </div>
@@ -56,11 +59,11 @@
                 <!--<label for="login-pass">Password: </label>-->
                 <input type="password" id="login-pass" name="login-pass" placeholder="Password:">
             </div>
-            
-                <button type="submit" class="intro2">Login</button>
-         
+                <div class="botonCenter">
+                    <button type="submit" class="intro2">Login</button>
+                </div>
            
-            <div id="logout-container">
+            <div class="botonCenter">
                 <button id="logout">Logout</button>
             </div>
         </form>

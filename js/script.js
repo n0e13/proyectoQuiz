@@ -485,7 +485,7 @@ auth.onAuthStateChanged(user => {
 // ************************** //
 
 function showUserData(nick, email, photo) {
-    userData.style.cssText = 'background-color: #73AB84;width: 70%;margin: 2rem auto;padding: 1rem;border-radius: 30px;display: flex;flex-direction: column; visibility:visible';
+    //userData.style.cssText = 'background-color: #73AB84;width: 70%;margin: 2rem auto;padding: 1rem;border-radius: 30px;display: flex;flex-direction: column; visibility:visible';
 
     userData.innerHTML = `<h3>User Data</h3>
                   <p>Username: ${nick}</p>
