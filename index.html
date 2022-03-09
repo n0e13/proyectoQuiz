@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="title">
+        <h1>EL HALL OF FAME TE ESPERA</h1>
+    </div>
+
+    <div id="signup">
+        <h3>Registro</h3>
+        
+        <form id="signup-form">
+            <div class="intro">
+                <!--<label for="signup-email">Email: </label>-->
+                <input type="text" id="signup-email" name="signup-email" placeholder="Email:">
+            </div>
+            <div class="intro">
+                <!--<label for="signup-user">User name: </label>-->
+                <input type="text" id="signup-user" name="signup-user" placeholder="User name:">
+            </div>
+            <div class="intro">
+                <!--<label for="signup-pass">Password: </label>-->
+                <input type="password" id="signup-pass" name="signup-pass" placeholder="Password:">
+            </div>
+                
+            <div class="labelCenter">
+                <label for="signup-picture"><h6>Sube tu imagen</h6></label>
+                <input type="file" id="signup-picture" accept="image/*" name="signup-picture" required hidden>
+            </div>
+            <div class="botonCenter">
+                <button type="submit" class="intro2">Sign Up</button>
+            </div>
+            
+        </form>
+        <div class="botonCenter">
+            <button id="google">Google</button>
+        </div>
+    </div>
+    <div id="login">
+        <h3>Login</h3>
+        <form id="login-form">
+            <div class="intro">
+                <!--<label for="login-email">Email: </label>-->
+                <input type="text" id="login-email" name="login-email" placeholder="Email:">
+            </div>
+            <div class="intro">
+                <!--<label for="login-pass">Password: </label>-->
+                <input type="password" id="login-pass" name="login-pass" placeholder="Password:">
+            </div>
+                <div class="botonCenter">
+                    <button type="submit" class="intro2">Login</button>
+                </div>
+           
+            <div class="botonCenter">
+                <button id="logout">Logout</button>
+            </div>
+        </form>
+        <p id="msgerr"></p>
+    </div>
+    
+
+    <div id="nick">
+        <label name="nombre">¿Cómo quieres que se te recuerde?</label>
+        <input type="text" name="player" minlength="3" id="player">
+        <button type="button" id="save">Guardar</button>
+        <div id="nick_error"></div>
+    </div>
+
+    <div id="user-data">
+        
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+   
+    <script>
+        const labels = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+        ];
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [0, 10, 5, 2, 20, 30, 45],
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+    </script>
+    <script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+
+    <script src="./js/script.js" type="module"></script>
+</body>
+
+</html>

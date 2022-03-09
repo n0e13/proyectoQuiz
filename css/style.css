@@ -1,73 +1,242 @@
-/***********/
-/* Botones */
-/***********/
+/*************/
+/* Variables */
+/*************/
 
-body {
-    box-sizing: border-box;
-    flex-wrap: wrap;
+:root {
+    --ff-primary: 'PT Mono', monospace;
+    --ff-secondary: 'Orbitron', sans-serif;
+    --ff-terciary: 'Dosis', sans-serif;
+
+    --clr-blue: #00dcf5ff;
+    --clr-green: #5de975ff;
+    --clr-yellow: #e2ff0aff;
+    --clr-orange: #ff695cff;
+    --clr-dark: #114b5fff;
+
+    --fs-h1: 2.45rem;
+    --fs-h2: 2.25rem;
+    --fs-h3: 1.25rem;
+    --fs-body: 1rem;
+}
+*{
+    font-family: 'Permanent Marker', cursive !important;
+}
+html{min-width: 320px;}
+body{
     display: flex;
-    flex-direction: column;
     align-items: center;
-    background-color: rgb(218, 208, 208);
-}
-
-h2 {
-    letter-spacing: 8px;
-    font-size: 20px;
-    color: rgb(221, 111, 20);
-}
-
-#bio_game {
-    display: none;
-}
-
-#preguntas {
-    display: flex;
-    justify-content: center;
-}
-
-fieldset {
-    display: flex;
     flex-direction: column;
-    /* align-items: center; */
-    align-content: space-around;
-    height: 70vh;
-    width: 30vw;
+    min-width: 320px;
 }
 
-fieldset>legend {
+h3{
+    font-size: 150%;
+    text-align: center;
+    color: black;
+}
+
+h4{
     text-align: center;
 }
 
-input {
-    height: 25%;
-    font-size: inherit;
+.title{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    text-align: center;
+    
+}
+
+.intro{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px; 
+    margin-top: 5px;
+}
+
+
+/*************/
+/* Botones */
+/*************/
+
+.botonCenter{
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    
+}
+
+.intro2{
+    color:white;
+    font-size: medium;
+    background-color: #00C897;
+    border: black solid 2px; 
+    border-radius: 15px;
+    width: 60%;
+    margin-top: 10px;
+}
+
+.text-label{
+    display: flex;
+    justify-content: center;
+    font-size: 150px;
+
+}
+
+.labelCenter{
+    margin-left: 50px;
+}
+
+#signup{
+    background-color: #63A9CF;
+    border-radius: 30px;
+    width: 250px;
+    padding-left: 0px;
+    margin-right: 80px;
+    margin-left: 80px;
+    box-shadow: rgb(85, 85, 85) 4px 4px 12px;
+   
+}
+
+
+#signup-form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    color:black;
+    font-size: 150%;
+    
+    
+}
+#signup-picture{
+    size: 0.5m !important;
+}
+
+#send{
+    margin-left: 1%;
+    width: 40%;
+ }
+
+#google{
+    color:white;
+    font-size: medium;
+    background-color: #00C897;
+    border: black solid 2px; 
+    border-radius: 15px;
+    width: 40%;
+    margin-bottom: 10px;
+}
+
+
+#login{
+    background-color: #63A9CF;
+    border-radius: 30px;
+    width: 250px;
+    padding-left: 0px;
+    margin-right: 80px;
+    margin-left: 80px;
+    border: #63A9CF solid 4px; 
+    margin-top: 30px;
+    box-shadow: rgb(10, 10, 10) 4px 4px 12px;
+    
+}
+
+
+#login-form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    color:white;
+    padding: 5px;
+    font-size: 150%;
+}
+
+#login-email{
+    margin-bottom: 5px;  
+}
+
+
+#logout{
+    margin-top: 5px;
+    color:white;
+    font-size: medium;
+    background-color: #00C897;
+    border: black solid 2px; 
+    border-radius: 15px;
+    width: 50%;
+}
+
+#nick,
+#user-data {
+    display: block;
+    visibility: hidden;
+    font-size: 17px;
+}
+
+#user-data{
+    display: flex;   
+    background-color: #63A9CF;
+    width: 70%;
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    visibility:visible;
+    box-shadow: rgb(10, 10, 10) 4px 4px 12px;
+}
+
+#user-data img{
+    width: 100%;
+    border-radius: 60%;
+}
+
+/*
+#photo {
+    border: black solid 4px;
+    
+}
+*/
+
+
+#answers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%;
+    padding: 20px;
 }
 
 .btn_yellow,
 .btn_blue,
 .btn_orange,
-.btn_grey {
+.btn_green {
     font-size: 1.5em;
+    width: 95%;
+    height: 70px;
+    margin: 10px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+    box-shadow: rgb(85, 85, 85) 4px 4px 12px;
+    
 }
 
 .btn_orange {
-    background-color: orange;
-    color: white;
+    background-color: var(--clr-orange);
 }
 
-.btn_grey {
-    background-color: grey;
-    color: white;
+.btn_green {
+    background-color: var(--clr-green);
 }
 
 .btn_yellow {
-    background-color: rgb(241, 223, 62);
+    background-color: var(--clr-yellow);
 }
 
 .btn_blue {
-    background-color: blue;
-    color: white;
+    background-color: var(--clr-blue);
 }
 
 #timer {
@@ -76,9 +245,96 @@ input {
 }
 
 
-
-/*****************/
+/* ------------- */
 /* Media queries */
-/*****************/
+/* ------------- */
+/* TABLET  A partir de 768px */
+@media screen and (min-width: 768px) {
 
-@media screen and (min-width: 768px) {}
+    .title{
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        text-align: center;
+        
+    }
+
+    #signup{
+        width: 550px;
+    }
+    #login{
+        margin-right: 30%;
+        margin-left: 30%;
+        width: 550px;
+    }
+    #send{
+        margin-left: 1%;
+        width: 40%;
+     }
+
+    #answers {
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-around;
+        color:black;
+    }
+
+    .labelCenter{
+        margin-left: 200px;
+    }
+
+    .btn_yellow,
+    .btn_blue,
+    .btn_orange,
+    .btn_green {
+        width: 40%;
+    }
+
+
+    .btn_yellow:hover,
+    .btn_blue:hover,
+    .btn_orange:hover,
+    .btn_green:hover {
+        transform: scale(1.1) perspective(1px)
+      }
+}
+
+/* PC  A partir de 1024px */
+@media screen and (min-width: 1024px) {
+
+    .labelCenter{
+        margin-left: 300px;
+    }
+
+    .title{
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        text-align: center;
+        
+    }
+
+    #signup{
+        width: 50%;
+        margin-right: 10%;
+        margin-left: 20%;
+    }
+    #send{
+        margin-left: 10%;
+        width: 20%;
+     }
+
+    #login{
+        width: 50%;
+        margin-right: 10%;
+        margin-left: 20%;
+    }
+
+    #user-data{
+        display: flex;
+        width: 47%;
+        margin-left: 30%;
+        
+    }
+    
+}
