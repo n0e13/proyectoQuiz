@@ -338,6 +338,13 @@ if (document.getElementById('signup-form') != null) {
         const signUpImg = document.getElementById('signup-picture').files[0];
         const storageRef = ref(storage, signUpImg.name);
         let publicImageUrl;
+        ////
+        let expReg= /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+        let esValido = expReg.test(signUpEmail);
+        if(!esValido){
+            document.getElementById('msgerrr').innerHTML = 'No es valido el email';
+        }else{
+        /////
         try {
             //Create auth user
             await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
@@ -361,6 +368,7 @@ if (document.getElementById('signup-form') != null) {
         } catch (error) {
             console.log('Error: ', error)
         }
+    }
 
     })
 }
@@ -385,8 +393,12 @@ if (document.getElementById('login-form') != null) {
         const docRef = doc(db, "users", loginEmail);
         //Search a document that matches with our ref
         const docSnap = await getDoc(docRef);
-
-        signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+        let expReg= /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+        let esValido = expReg.test(loginEmail);
+        if(!esValido){
+            document.getElementById('msgerr').innerHTML = 'No es valido el email';
+        }else{
+            signInWithEmailAndPassword(auth, loginEmail, loginPassword)
             .then((userCredential) => {
                 console.log('User authenticated')
                 const user = userCredential.user;
@@ -405,9 +417,10 @@ if (document.getElementById('login-form') != null) {
                 const errorCode = error.code;
                 const errorMessage = error.message;
             });
+        }
     })
+        
 }
-
 
 
 
@@ -485,8 +498,7 @@ auth.onAuthStateChanged(user => {
 // ************************** //
 
 function showUserData(nick, email, photo) {
-    //userData.style.cssText = 'background-color: #73AB84;width: 70%;margin: 2rem auto;padding: 1rem;border-radius: 30px;display: flex;flex-direction: column; visibility:visible';
-
+   
     userData.innerHTML = `<h3>User Data</h3>
                   <p>Username: ${nick}</p>
                   <img src=${photo} alt='User profile picture'>

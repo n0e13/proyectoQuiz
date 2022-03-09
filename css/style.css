@@ -47,6 +47,11 @@ h4{
     
 }
 
+.title h1{
+    width: 100%;
+    text-align: center;
+}
+
 .intro{
     display: flex;
     justify-content: center;
@@ -84,7 +89,8 @@ h4{
 }
 
 .labelCenter{
-    margin-left: 50px;
+    display:flex;
+    justify-content: center;
 }
 
 #signup{
@@ -258,6 +264,10 @@ h4{
         text-align: center;
         
     }
+    .title h1{
+        width: 100%;
+        text-align: center;
+    }
 
     #signup{
         width: 550px;
@@ -280,7 +290,8 @@ h4{
     }
 
     .labelCenter{
-        margin-left: 200px;
+        display:flex;
+    justify-content: center;
     }
 
     .btn_yellow,
@@ -303,7 +314,8 @@ h4{
 @media screen and (min-width: 1024px) {
 
     .labelCenter{
-        margin-left: 300px;
+        display:flex;
+        justify-content: center;
     }
 
     .title{
@@ -313,11 +325,14 @@ h4{
         text-align: center;
         
     }
+    .title h1{
+        width: 100%;
+        text-align: center;
+    }
 
     #signup{
         width: 50%;
-        margin-right: 10%;
-        margin-left: 20%;
+        margin: 20px auto;
     }
     #send{
         margin-left: 10%;
@@ -326,14 +341,13 @@ h4{
 
     #login{
         width: 50%;
-        margin-right: 10%;
-        margin-left: 20%;
+        margin: 20px auto;
     }
 
     #user-data{
         display: flex;
+        margin: 20px auto;
         width: 47%;
-        margin-left: 30%;
         
     }
     
