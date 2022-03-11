@@ -396,14 +396,13 @@ if (document.getElementById('login-form') != null) {
             .then((userCredential) => {
                 console.log('User authenticated')
                 const user = userCredential.user;
-                console.log(user);
                 loginForm.reset();
             })
             .then(() => {
                 if (docSnap.exists()) {
                     //TODO: coger de la sesión los datos y no pasarlos por parámetro al showUserData
-                    sessionStorage.setItem("name", docUser.data().username);
-                    sessionStorage.setItem("avatar", docUser.data().profile_picture);
+                  /*   sessionStorage.setItem("name", docUser.data().username);
+                    sessionStorage.setItem("avatar", docUser.data().profile_picture); */
                     // Muestro la caja de información
                     showUserData(docSnap.data().username, docSnap.data().email, docSnap.data().profile_picture);
                 } else {
