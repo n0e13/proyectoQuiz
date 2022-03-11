@@ -1006,7 +1006,7 @@ function startQuiz() {
 //               //
 // ************* //
 let aTenQuestions = [];
-if (window.location.pathname == "/pages/question.html") {
+if (document.getElementById("timer")) {
     getTenQuestions()
         .then((data) => {
             aTenQuestions = data;
